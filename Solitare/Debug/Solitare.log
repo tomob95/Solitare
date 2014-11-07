@@ -1,0 +1,51 @@
+﻿Build started 7/11/2014 1:02:51 p.m..
+     1>Project "H:\GitHub\Solitare\Solitare\Solitare.vcxproj" on node 2 (build target(s)).
+       Project file contains ToolsVersion="12.0". This toolset may be unknown or missing, in which case you may be able to resolve this by installing the appropriate version of MSBuild, or the build may have been forced to a particular ToolsVersion for policy reasons. Treating the project as if it had ToolsVersion="4.0". For more information, please see http://go.microsoft.com/fwlink/?LinkId=291333.
+     1>InitializeBuildStatus:
+         Touching "Debug\Solitare.unsuccessfulbuild".
+       ClCompile:
+         C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\CL.exe /c /ZI /nologo /W3 /WX- /Od /Oy- /D WIN32 /D _DEBUG /D _WINDOWS /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc100.pdb" /Gd /TP /analyze- /errorReport:prompt Entity.cpp Game.cpp Home.cpp Level.cpp Sprite.cpp main.cpp
+         main.cpp
+     1>h:\github\solitare\solitare\main.cpp(44): error C2248: 'CCard::m_iFace' : cannot access private member declared in class 'CCard'
+                 h:\github\solitare\solitare\card.h(11) : see declaration of 'CCard::m_iFace'
+                 h:\github\solitare\solitare\card.h(4) : see declaration of 'CCard'
+     1>h:\github\solitare\solitare\main.cpp(45): error C2248: 'CCard::m_iSuit' : cannot access private member declared in class 'CCard'
+                 h:\github\solitare\solitare\card.h(12) : see declaration of 'CCard::m_iSuit'
+                 h:\github\solitare\solitare\card.h(4) : see declaration of 'CCard'
+     1>h:\github\solitare\solitare\main.cpp(46): error C2065: 'g_vDeck' : undeclared identifier
+     1>h:\github\solitare\solitare\main.cpp(46): error C2228: left of '.push_back' must have class/struct/union
+                 type is ''unknown-type''
+     1>h:\github\solitare\solitare\main.cpp(50): error C2065: 'g_vDeck' : undeclared identifier
+     1>h:\github\solitare\solitare\main.cpp(50): error C2228: left of '.begin' must have class/struct/union
+                 type is ''unknown-type''
+     1>h:\github\solitare\solitare\main.cpp(50): error C2065: 'g_vDeck' : undeclared identifier
+     1>h:\github\solitare\solitare\main.cpp(50): error C2228: left of '.end' must have class/struct/union
+                 type is ''unknown-type''
+     1>h:\github\solitare\solitare\main.cpp(50): error C2780: 'void std::random_shuffle(_RanIt,_RanIt,_Fn1 &)' : expects 3 arguments - 2 provided
+                 c:\program files (x86)\microsoft visual studio 10.0\vc\include\algorithm(2254) : see declaration of 'std::random_shuffle'
+     1>h:\github\solitare\solitare\main.cpp(64): error C2065: 'g_vDeck' : undeclared identifier
+     1>h:\github\solitare\solitare\main.cpp(64): error C2228: left of '.size' must have class/struct/union
+                 type is ''unknown-type''
+     1>h:\github\solitare\solitare\main.cpp(66): error C2065: 'wstrFace' : undeclared identifier
+     1>h:\github\solitare\solitare\main.cpp(66): error C2065: 'g_vDeck' : undeclared identifier
+     1>h:\github\solitare\solitare\main.cpp(66): error C2227: left of '->m_iFace' must point to class/struct/union/generic type
+     1>h:\github\solitare\solitare\main.cpp(66): error C2065: 'wstrSuit' : undeclared identifier
+     1>h:\github\solitare\solitare\main.cpp(66): error C2065: 'g_vDeck' : undeclared identifier
+     1>h:\github\solitare\solitare\main.cpp(66): error C2227: left of '->m_iSuit' must point to class/struct/union/generic type
+         Sprite.cpp
+         Level.cpp
+     1>h:\github\solitare\solitare\level.cpp(23): error C2614: 'CLevel' : illegal member initialization: 'm_p' is not a base or member
+     1>h:\github\solitare\solitare\level.cpp(23): error C2614: 'CLevel' : illegal member initialization: 'm_iBricksRemaining' is not a base or member
+     1>h:\github\solitare\solitare\level.cpp(27): error C2065: 'm_vecBricks' : undeclared identifier
+     1>h:\github\solitare\solitare\level.cpp(27): error C2228: left of '.size' must have class/struct/union
+                 type is ''unknown-type''
+     1>h:\github\solitare\solitare\level.cpp(27): fatal error C1903: unable to recover from previous error(s); stopping compilation
+         Home.cpp
+         Game.cpp
+         Entity.cpp
+         Generating Code...
+     1>Done Building Project "H:\GitHub\Solitare\Solitare\Solitare.vcxproj" (build target(s)) -- FAILED.
+
+Build FAILED.
+
+Time Elapsed 00:00:04.21
