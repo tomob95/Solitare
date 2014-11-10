@@ -25,9 +25,13 @@ public:
 	HWND GetWindow();
 	void GameOverWon();
 	void GameOverLost();
+	void SetMouseCoords(int _x, int _y);
+	void SetMouseDown(bool _bMouseDown);
+	void HandleMouseDrag();
 	// Singleton Methods
 	static CGame& GetInstance();
 	static void DestroyInstance();
+
 protected:
 private:
 	CGame();

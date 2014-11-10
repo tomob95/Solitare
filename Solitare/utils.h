@@ -3,12 +3,20 @@
 #define __UTILS_H__
 // Library Includes
 #include <strstream>
+#include <Windows.h>
 // Local Includes
 // Types
 // Constants
 // Prototypes
 #define VALIDATE(a) if (!a) return (false)
 
+const int CARD_WIDTH	=  132;
+const int CARD_HEIGHT	=  192;
+const int MASK_X		=  132;
+const int MASK_Y		=  768;
+const int BACK_X		=  0;
+const int BACK_Y		=  768;
+static HWND hwnd;
 template<typename T>
 std::string ToString(const T& _value)
 {

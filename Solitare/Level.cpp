@@ -1,11 +1,14 @@
 // Library Includes
 #include <locale>
 #include <codecvt>
+#include <algorithm>
 // Local Includes
 #include "Game.h"
+#include "resource.h"
 #include "utils.h"
 #include "backbuffer.h"
 #include "Deck.h"
+#include "Column.h"
 // This Include
 #include "Level.h"
 // Static Variables
@@ -19,7 +22,8 @@
 CLevel::CLevel()
 : m_pDeck(0)
 , m_iWidth(0)
-, m_iHeight(0){}
+, m_iHeight(0)
+, m_bMouseDown(false){}
 
 CLevel::~CLevel()
 {
@@ -46,7 +50,60 @@ bool CLevel::Initialise(int _iWidth, int _iHeight)
 	const float fBallVelY = 75.0f;
 
 	m_pDeck = new CDeck();
-	VALIDATE(m_pDeck->Initialise());
+	VALIDATE(m_pDeck->Initialise(0, 4));
+	m_pDeck->SetX(40);
+	m_pDeck->SetY(40);
+
+	CCard* _TempCard;
+	CColumn* _TempColumn;
+
+	//Initialise the cards here
+	
+	//Create a card of each face and suit
+	for (int i = 0; i < 4; i++)
+	{
+		for (int j = 0; j < 13; j++)
+		{
+			_TempCard = new CCard(j, i);
+			_TempCard->Initialise(j, i);
+			m_pDeck->m_pDeck.push_back(_TempCard);
+		}
+	}
+
+	//Create each column
+	for(int i=0; i<7; i++)
+	{
+		_TempColumn = new CColumn();
+		_TempColumn->Initialise(0,5);
+		m_pColumns.push_back(_TempColumn);
+		_TempColumn->SetX(40 + (i * 165));
+		_TempColumn->SetY(300);
+	}
+
+	//Shuffle the cards in the deck
+	std::random_shuffle(m_pDeck->m_pDeck.begin(), m_pDeck->m_pDeck.end());
+
+
+	for(int i = 0; i < 7; i++)
+	{
+		//deal cards into the columns
+		for(int j=0; j < i+1; j++)
+		{
+			_TempCard = m_pDeck->m_pDeck.back();
+			m_pDeck->m_pDeck.pop_back();
+			m_pColumns[i]->m_pPile.push_back(_TempCard);
+			if(j == i)
+			{
+				_TempCard->SetFaceUp(true);
+			}
+			else
+			{
+				_TempCard->SetFaceUp(false);
+			}
+		}
+	}
+
+	/*
 	m_pPaddle = new CPaddle();
 	VALIDATE(m_pPaddle->Initialise());
 
@@ -77,11 +134,13 @@ bool CLevel::Initialise(int _iWidth, int _iHeight)
 		m_vecBricks.push_back(pBrick);
 	}
 	SetBricksRemaining(kiNumBricks);
+	*/
 	return (true);
 }
 
 void CLevel::Draw()
 {
+	/*
 	for (unsigned int i = 0; i < m_vecBricks.size(); ++i)
 	{
 		m_vecBricks[i]->Draw();
@@ -89,153 +148,118 @@ void CLevel::Draw()
 	m_pPaddle->Draw();
 	m_pBall->Draw();
 	DrawScore();
+	*/
+	m_pDeck->Draw();
+	for(int i=0; i<7; i++)
+	{
+		m_pColumns[i]->Draw();
+	}
+	if(!m_pDraggedCards.empty())
+	{
+		for(int i=m_pDraggedCards.size()-1; i>=0; i--)
+		{
+			m_pDraggedCards[i]->Draw();
+		}
+	}
 }
 
 void CLevel::Process(float _fDeltaTick)
 {
-	ProcessBallWallCollision();
-	ProcessBallPaddleCollision();
-	ProcessBallBrickCollision();
+	if(m_bMouseDown)
+	{
+		HandleMouseDrag();
+	}
 	ProcessCheckForWin();
-	ProcessBallBounds();
-
-	for (unsigned int i = 0; i < m_vecBricks.size(); ++i)
+	m_pDeck->Process(_fDeltaTick);
+	for (int i = 0; i < 7; i++)
 	{
-		m_vecBricks[i]->Process(_fDeltaTick);
+		m_pColumns[i]->Process(_fDeltaTick);
 	}
-
-	m_pPaddle->Process(_fDeltaTick);
-	m_pBall->Process(_fDeltaTick);
-}
-
-CPaddle* CLevel::GetPaddle() const
-{
-	return (m_pPaddle);
-}
-
-void CLevel::ProcessBallWallCollision()
-{
-	float fBallX = m_pBall->GetX();
-	float fBallY = m_pBall->GetY();
-	float fBallW = m_pBall->GetWidth();
-	float fBallH = m_pBall->GetHeight();
-	float fHalfBallW = fBallW / 2;
-
-	if (fBallX < fHalfBallW)
+	for(unsigned int i=0; i<m_pDraggedCards.size(); i++)
 	{
-		m_pBall->SetVelocityX(m_pBall->GetVelocityX() * -1);
+		m_pDraggedCards[i]->SetX(m_fMouseX - (CARD_WIDTH / 2));
+		m_pDraggedCards[i]->SetY(m_fMouseY - 29 + (m_pDraggedCards.size() -1 - i) * 58);
+		m_pDraggedCards[i]->Process(_fDeltaTick);
 	}
-	else if (fBallX > m_iWidth - fHalfBallW)
-	{
-		m_pBall->SetVelocityX(m_pBall->GetVelocityX() * -1);
-	}
-	if (fBallY < 0)
-	{
-		m_pBall->SetVelocityY(m_pBall->GetVelocityY() * -1);
-	}
+	//for (unsigned int i = 0; i < m_vecBricks.size(); ++i)
+	//{
+	//	m_vecBricks[i]->Process(_fDeltaTick);
+	//}
 
-	#ifdef CHEAT_BOUNCE_ON_BACK_WALL
-		if (fBallY > m_iHeight - fBallH)
-		{
-			m_pBall->SetVelocityY(m_pBall->GetVelocityY() * -1);
-		}
-	#endif //CHEAT_BOUNCE_ON_BACK_WALL
-}
-
-void CLevel::ProcessBallPaddleCollision()
-{
-	float fBallR = m_pBall->GetRadius();
-	float fBallX = m_pBall->GetX();
-	float fBallY = m_pBall->GetY();
-	float fPaddleX = m_pPaddle->GetX();
-	float fPaddleY = m_pPaddle->GetY();
-	float fPaddleH = m_pPaddle->GetHeight();
-	float fPaddleW = m_pPaddle->GetWidth();
-	if ((fBallX + fBallR > fPaddleX - fPaddleW / 2) &&
-	(fBallX - fBallR < fPaddleX + fPaddleW / 2) &&
-	(fBallY + fBallR > fPaddleY - fPaddleH / 2) &&
-	(fBallY - fBallR < fPaddleY + fPaddleH / 2))
-	{
-		m_pBall->SetY((fPaddleY - fPaddleH / 2) - fBallR);
-		m_pBall->SetVelocityY(m_pBall->GetVelocityY() * -1);
-	}
-}
-
-void CLevel::ProcessBallBrickCollision()
-{
-	for (unsigned int i = 0; i < m_vecBricks.size(); ++i)
-	{
-		if (!m_vecBricks[i]->IsHit())
-		{
-			float fBallR = m_pBall->GetRadius();
-			float fBallX = m_pBall->GetX();
-			float fBallY = m_pBall->GetY();
-			float fBrickX = m_vecBricks[i]->GetX();
-			float fBrickY = m_vecBricks[i]->GetY();
-			float fBrickH = m_vecBricks[i]->GetHeight();
-			float fBrickW = m_vecBricks[i]->GetWidth();
-
-			if ((fBallX + fBallR > fBrickX - fBrickW / 2) &&
-			(fBallX - fBallR < fBrickX + fBrickW / 2) &&
-			(fBallY + fBallR > fBrickY - fBrickH / 2) &&
-			(fBallY - fBallR < fBrickY + fBrickH / 2))
-			{
-				//Hit the front side of the brick...
-				m_pBall->SetY((fBrickY + fBrickH / 2.0f) + fBallR);
-				m_pBall->SetVelocityY(m_pBall->GetVelocityY() * -1);
-				m_vecBricks[i]->SetHit(true);
-				SetBricksRemaining(GetBricksRemaining() - 1);
-			}
-		}
-	}
+	//m_pPaddle->Process(_fDeltaTick);
+	//m_pBall->Process(_fDeltaTick);
 }
 
 void CLevel::ProcessCheckForWin()
 {
-	for (unsigned int i = 0; i < m_vecBricks.size(); ++i)
+	//for (unsigned int i = 0; i < m_vecBricks.size(); ++i)
+	//{
+	//	if (!m_vecBricks[i]->IsHit())
+	//	{
+	//		return;
+	//	}
+	//}
+	//CGame::GetInstance().GameOverWon();
+}
+
+void CLevel::HandleMouseDrag()
+{
+
+	//Iterate through all columns
+	//if top card
+		//See if the mouse is within the bounds of the top card
+//	MessageBox(0, L"Mouse is being dragged", L"Debug", MB_OK);
+	if(m_pDraggedCards.empty())
 	{
-		if (!m_vecBricks[i]->IsHit())
+		for(int i=0; i<7; i++)
 		{
-			return;
+			for(unsigned int j=0; j<m_pColumns[i]->m_pPile.size()-1; j++)
+			{
+				//Get current card's X and Y
+				int _CardX = m_pColumns[i]->m_pPile[j]->GetX();
+				int _CardY = m_pColumns[i]->m_pPile[j]->GetY();
+
+				//Make sure the card is face up 
+				if(m_pColumns[i]->m_pPile[j]->GetFaceUp())
+				{
+					//See if the mouse is within the cards's bounds (only the showing part)
+					if((m_fMouseX >= _CardX) && (m_fMouseX < _CardX+CARD_WIDTH)
+					&& (m_fMouseY >= _CardY) && (m_fMouseY < _CardY+58))
+					{
+						//Iterate through the cards beneath, adding them to the dragging vector
+						for(unsigned int k = j; k<m_pColumns[i]->m_pPile.size(); k++)
+						{
+							m_pColumns[i]->m_pPile[k]->SetDragged(true);
+							m_pDraggedCards.insert(m_pDraggedCards.begin(), m_pColumns[i]->m_pPile[k]);
+						}
+					
+						//Remove the cards that are being dragged
+						m_pColumns[i]->m_pPile.erase(m_pColumns[i]->m_pPile.begin() + j, m_pColumns[i]->m_pPile.end());
+						m_iDraggedCardsLastColumn = i;
+						return;
+					}
+				}
+			}
+			int _FrontCardX = m_pColumns[i]->GetTopCard()->GetX();
+			int _FrontCardY = m_pColumns[i]->GetTopCard()->GetY();
+			if((m_fMouseX >= _FrontCardX) && (m_fMouseX < _FrontCardX+CARD_WIDTH)
+				&& (m_fMouseY >= _FrontCardY) && (m_fMouseY < _FrontCardY+CARD_HEIGHT))
+			{
+				//MessageBox(0, L"Mouse is being dragged", L"Debug", MB_OK);
+
+				m_pColumns[i]->GetTopCard()->SetDragged(true);
+				//m_pDraggedCards.insert(m_pDraggedCards.begin(), m_pColumns[i]->GetTopCard());
+				m_pDraggedCards.push_back(m_pColumns[i]->m_pPile.back());
+				m_pColumns[i]->m_pPile.pop_back();
+				m_iDraggedCardsLastColumn = i;
+				return;
+			
+			}
+
 		}
 	}
-	CGame::GetInstance().GameOverWon();
 }
 
-void CLevel::ProcessBallBounds()
-{
-	if (m_pBall->GetX() < 0)
-	{
-		m_pBall->SetX(0);
-	}
-
-	else if (m_pBall->GetX() > m_iWidth)
-	{
-		m_pBall->SetX(static_cast<float>(m_iWidth));
-	}
-
-	if (m_pBall->GetY() < 0)
-	{
-		m_pBall->SetY(0.0f);
-	}
-
-	else if (m_pBall->GetY() > m_iHeight)
-	{
-		CGame::GetInstance().GameOverLost();
-	//m_pBall->SetY(m_iHeight);
-	}
-}
-
-int CLevel::GetBricksRemaining() const
-{
-	return (m_iBricksRemaining);
-}
-
-void CLevel::SetBricksRemaining(int _i)
-{
-	m_iBricksRemaining = _i;
-	UpdateScoreText();
-}
 
 void CLevel::DrawScore()
 {
@@ -246,9 +270,21 @@ void CLevel::DrawScore()
 	TextOut(hdc, kiX, kiY, m_strScore.c_str(), static_cast<int>(m_strScore.size()));
 }
 
+void CLevel::SetMouseCoords(int _x, int _y)
+{
+	m_fMouseX = _x;
+	m_fMouseY = _y;
+}
+
+
 void CLevel::UpdateScoreText()
 {
-	std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> converter;
-	m_strScore = L"Bricks Remaining: ";
-	m_strScore += converter.from_bytes(ToString(GetBricksRemaining()));
+	//std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> converter;
+	//m_strScore = L"Bricks Remaining: ";
+	//m_strScore += converter.from_bytes(ToString(GetBricksRemaining()));
+}
+
+void CLevel::SetMouseDown(bool _bMouseDown)
+{
+	m_bMouseDown = _bMouseDown;
 }

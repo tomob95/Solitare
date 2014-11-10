@@ -10,7 +10,7 @@ public:
 	CHome();
 	CHome(eSuit _eSuit):m_eSuit(_eSuit){};
 	virtual ~CHome();
-	virtual bool Initialise(const int _kiSpriteID, const int _kiMaskID);
+	virtual bool Initialise(int _iDrawX, int _iDrawY);
 	virtual void Draw();
 	virtual void Process(float _fDeltaTick);
 	CCard* GetTopCard();

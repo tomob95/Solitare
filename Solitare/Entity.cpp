@@ -10,8 +10,6 @@
 // Implementation
 
 CEntity::CEntity()
-: m_fX(0.0f)
-, m_fY(0.0f)
 {
 }
 
@@ -21,10 +19,11 @@ CEntity::~CEntity()
 	m_pSprite = 0;
 }
 
-bool CEntity::Initialise(const int _kiSpriteID, const int _kiMaskID)
+bool CEntity::Initialise(int _iDrawX, int _iDrawY)
 {
 	m_pSprite = new CSprite();
-	VALIDATE(m_pSprite->Initialise(_kiSpriteID, _kiMaskID));
+	VALIDATE(m_pSprite->Initialise(_iDrawX, _iDrawY));
+
 	return (true);
 }
 
@@ -35,19 +34,18 @@ void CEntity::Draw()
 
 void CEntity::Process(float _fDeltaTick)
 {
-	m_pSprite->SetX(static_cast<int>(m_fX));
-	m_pSprite->SetY(static_cast<int>(m_fY));
+	
 	m_pSprite->Process(_fDeltaTick);
 }
 
-float CEntity::GetX() const
+int CEntity::GetX() const
 {
-	return (m_fX);
+	return (m_pSprite->GetX());
 }
 
-float CEntity::GetY() const
+int CEntity::GetY() const
 {
-	return (m_fY);
+	return (m_pSprite->GetY());
 }
 
 float CEntity::GetWidth() const
@@ -60,12 +58,33 @@ float CEntity::GetHeight() const
 	return (static_cast<float>(m_pSprite->GetHeight()));
 }
 
-void CEntity::SetX(float _f)
+void CEntity::SetX(int _f)
 {
-	m_fX = _f;
+	m_pSprite->SetX(_f);
+	
 }
 
-void CEntity::SetY(float _f)
+void CEntity::SetY(int _f)
 {
-	m_fY = _f;
+	m_pSprite->SetY(_f);
+}
+
+void CEntity::SetDrawX(int _f)
+{
+	m_pSprite->SetDrawX(_f);
+}
+
+void CEntity::SetDrawY(int _f)
+{
+	m_pSprite->SetDrawY(_f);
+}
+
+int CEntity::GetDrawX() const
+{
+	return m_pSprite->GetDrawX();
+}
+
+int CEntity::GetDrawY() const
+{
+	return m_pSprite->GetDrawY();
 }

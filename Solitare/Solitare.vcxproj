@@ -19,7 +19,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v100</PlatformToolset>
+    <PlatformToolset>v110</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
@@ -57,6 +57,7 @@
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>winmm.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -83,7 +84,6 @@
     <ClCompile Include="Clock.cpp" />
     <ClCompile Include="Column.cpp" />
     <ClCompile Include="Deck.cpp" />
-    <ClCompile Include="Draw.cpp" />
     <ClCompile Include="Entity.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="Home.cpp" />
@@ -97,7 +97,6 @@
     <ClInclude Include="Clock.h" />
     <ClInclude Include="Column.h" />
     <ClInclude Include="Deck.h" />
-    <ClInclude Include="Draw.h" />
     <ClInclude Include="Entity.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="Home.h" />
@@ -111,6 +110,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="bitmap1.bmp" />
+    <None Include="images\CardMask.bmp" />
+    <None Include="images\SpriteSheet.bmp" />
+    <None Include="images\spr_CardBack.bmp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

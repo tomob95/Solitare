@@ -13,13 +13,17 @@ class CEntity
 public:
 	CEntity();
 	virtual ~CEntity();
-	virtual bool Initialise(const int _kiSpriteID, const int _kiMaskID);
+	virtual bool Initialise(int _iDrawX, int _iDrawY);
 	virtual void Draw();
 	virtual void Process(float _fDeltaTick);
-	void SetX(float _f);
-	void SetY(float _f);
-	float GetX() const;
-	float GetY() const;
+	void SetX(int _f);
+	void SetY(int _f);
+	int GetX() const;
+	int GetY() const;
+	void SetDrawX(int _f);
+	void SetDrawY(int _f);
+	int GetDrawX() const;
+	int GetDrawY() const;
 	float GetHeight() const;
 	float GetWidth() const;
 protected:
@@ -30,8 +34,6 @@ private:
 public:
 protected:
 	CSprite* m_pSprite;
-	float m_fX;
-	float m_fY;
 private:
 };
 #endif // __ENTITY_H__

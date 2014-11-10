@@ -4,6 +4,7 @@
 // Library Includes
 #include <vector>
 #include <string>
+
 // Local Includes
 // Types
 // Constants
@@ -23,6 +24,9 @@ public:
 	void Draw();
 	void Process(float _fDeltaTick);
 	CDeck* GetDeck() const;
+	void SetMouseCoords(int _x, int _y);
+	void HandleMouseDrag();
+	void SetMouseDown(bool _bMouseDown);
 protected:
 	void ProcessCheckForWin();
 	void UpdateScoreText();
@@ -35,10 +39,16 @@ private:
 public:
 protected:
 	CDeck* m_pDeck;
-	std::vector<CColumn*> m_pColumn;
+	std::vector<CColumn*> m_pColumns;
+	std::vector<CCard*> m_pDraggedCards;
+	int m_iDraggedCardsLastColumn;
 	int m_iWidth;
 	int m_iHeight;
 	std::wstring m_strScore;
+	bool m_bMouseDown;
+
+	int m_fMouseX;
+	int m_fMouseY;
 private:
 };
 

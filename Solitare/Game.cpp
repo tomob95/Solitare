@@ -47,7 +47,7 @@ bool CGame::Initialise(HINSTANCE _hInstance, HWND _hWnd, int _iWidth, int _iHeig
 	m_pLevel = new CLevel();
 	VALIDATE(m_pLevel->Initialise(_iWidth, _iHeight));
 
-	ShowCursor(false);
+	//ShowCursor(false);
 	return (true);
 }
 
@@ -117,4 +117,19 @@ HINSTANCE CGame::GetAppInstance()
 HWND CGame::GetWindow()
 {
 	return (m_hMainWindow);
+}
+
+void CGame::SetMouseCoords(int _x, int _y)
+{
+	m_pLevel->SetMouseCoords(_x,_y);
+}
+
+void CGame::SetMouseDown(bool _bMouseDown)
+{
+	m_pLevel->SetMouseDown(_bMouseDown);
+}
+
+void CGame::HandleMouseDrag()
+{
+	m_pLevel->HandleMouseDrag();
 }

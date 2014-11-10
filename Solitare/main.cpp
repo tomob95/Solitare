@@ -4,26 +4,19 @@
 #include <vector>
 #include <codecvt>
 #include <locale>
-#include <algorithm>
 #include <ctime>
-#include "Home.h" //includes card and stack
+
+#include "Game.h"
 #include "utils.h"
+#include "resource.h"
+
 #define WINDOW_CLASS_NAME L"WINCLASS1"
 
 //Struct and Enum Declarations
 
-void InitGame(HWND hwnd)
-{
-	
-}
-
-void GameLoop()
-{
-	//One frame of game logic occurs here...
-
-}
 LRESULT CALLBACK WindowProc(HWND _hwnd,	UINT _msg,	WPARAM _wparam,	LPARAM _lparam)
 {
+
 	// This is the main message handler of the system.
 	PAINTSTRUCT ps; // Used in WM_PAINT.
 	HDC hdc; // Handle to a device context.
@@ -32,23 +25,6 @@ LRESULT CALLBACK WindowProc(HWND _hwnd,	UINT _msg,	WPARAM _wparam,	LPARAM _lpara
 	{
 	case WM_CREATE:
 	{
-		srand((unsigned int)time(0));
-		CCard* _TempCard;
-
-		//Initialise the game system here
-		for (int i = 0; i < 4; i++)
-		{
-			for (int j = 0; j < 13; j++)
-			{
-				_TempCard = new CCard;
-				_TempCard->m_iFace = j;
-				_TempCard->m_iSuit = i;
-				g_vDeck.push_back(_TempCard);
-			}
-		}
-
-		std::random_shuffle(g_vDeck.begin(), g_vDeck.end());
-
 		// Do initialization stuff here.
 		// Return Success.
 		return (0);
@@ -59,21 +35,30 @@ LRESULT CALLBACK WindowProc(HWND _hwnd,	UINT _msg,	WPARAM _wparam,	LPARAM _lpara
 		// Simply validate the window.
 		hdc = BeginPaint(_hwnd, &ps);
 		// You would do all your painting here...
-
-		TextOut(hdc, 0, 0, L"DECK:", 5);
-		for (unsigned int i = 0; i < g_vDeck.size(); i++)
-		{
-			std::wstring Message = wstrFace[g_vDeck[i]->m_iFace] + L" of " + wstrSuit[g_vDeck[i]->m_iSuit] + L"S";
-			//MessageBoxW(hwnd, Message.c_str(), L"YOUR CARD", MB_OK | MB_ICONEXCLAMATION);
-			TextOut(hdc, 0, i * 15, Message.c_str(), Message.size());
-		}
-
 		EndPaint(_hwnd, &ps);
 		// Return Success.
 		return (0);
 	}
 		break;
 
+	case WM_MOUSEMOVE:
+	{
+		CGame::GetInstance().SetMouseCoords(LOWORD(_lparam), HIWORD(_lparam));
+	}
+		break;
+
+	case WM_LBUTTONDOWN:
+	{
+		//CGame::GetInstance().SetMouseCoords(LOWORD(_lparam), HIWORD(_lparam));
+		CGame::GetInstance().SetMouseDown(true);
+	}
+		break;
+
+	case WM_LBUTTONUP:
+		{
+		CGame::GetInstance().SetMouseDown(false);
+	}
+		break;
 
 	case WM_DESTROY:
 	{
@@ -91,8 +76,12 @@ LRESULT CALLBACK WindowProc(HWND _hwnd,	UINT _msg,	WPARAM _wparam,	LPARAM _lpara
 int WINAPI WinMain(HINSTANCE _hInstance, HINSTANCE _hPrevInstance,	LPSTR _lpCmdLine,	int _nCmdShow)
 {
 	WNDCLASSEX winclass; // This will hold the class we create.
-	HWND hwnd; // Generic window handle.
+	//HWND hwnd;
 	MSG msg; // Generic message.
+
+	const int WINDOW_WIDTH = 1300;
+	const int WINDOW_HEIGHT = 900;
+
 	// First fill in the window class structure.
 	winclass.cbSize = sizeof(WNDCLASSEX);
 	winclass.style = CS_DBLCLKS | CS_OWNDC | CS_HREDRAW | CS_VREDRAW;
@@ -103,7 +92,7 @@ int WINAPI WinMain(HINSTANCE _hInstance, HINSTANCE _hPrevInstance,	LPSTR _lpCmdL
 	winclass.hIcon = LoadIcon(NULL, IDI_APPLICATION);
 	winclass.hCursor = LoadCursor(NULL, IDC_ARROW);
 	winclass.hbrBackground =
-		static_cast<HBRUSH>(GetStockObject(WHITE_BRUSH));
+		CreateSolidBrush(RGB(41,63,151));
 	winclass.lpszMenuName = NULL;
 	winclass.lpszClassName = WINDOW_CLASS_NAME;
 	winclass.hIconSm = LoadIcon(NULL, IDI_APPLICATION);
@@ -118,7 +107,7 @@ int WINAPI WinMain(HINSTANCE _hInstance, HINSTANCE _hPrevInstance,	LPSTR _lpCmdL
 			L"Solitare", // Title.
 			WS_OVERLAPPEDWINDOW | WS_VISIBLE,
 			0, 0, // Initial x,y.
-			900, 900, // Initial width, height.
+			WINDOW_WIDTH, WINDOW_HEIGHT, // Initial width, height.
 			NULL, // Handle to parent.
 			NULL, // Handle to menu.
 			_hInstance, // Instance of this application.
@@ -127,10 +116,11 @@ int WINAPI WinMain(HINSTANCE _hInstance, HINSTANCE _hPrevInstance,	LPSTR _lpCmdL
 	{
 		return (0);
 	}
-
+	srand((unsigned int)time(0));
 
 	//Run the initialization, set up the game
-	InitGame(hwnd);
+	CGame& Game = CGame::GetInstance();
+	Game.Initialise(_hInstance, hwnd, WINDOW_WIDTH, WINDOW_HEIGHT);
 	
 	// Enter main event loop
 	while (true)
@@ -149,7 +139,7 @@ int WINAPI WinMain(HINSTANCE _hInstance, HINSTANCE _hPrevInstance,	LPSTR _lpCmdL
 			DispatchMessage(&msg);
 		}
 			// Main game processing goes here.
-			GameLoop(); //One frame of game logic occurs here...
+			Game.ExecuteOneFrame(); //One frame of game logic occurs here...
 	}
 	// Return to Windows like this...
 	return (static_cast<int>(msg.wParam));

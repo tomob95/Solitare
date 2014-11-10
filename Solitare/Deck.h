@@ -2,6 +2,7 @@
 
 #pragma once
 #include <stack>
+#include <vector>
 #include "entity.h"
 #include "Card.h"
 using namespace std;
@@ -12,7 +13,7 @@ class CDeck :
 public:
 	CDeck(void);
 	virtual ~CDeck(void);
-	virtual bool Initialise(const int _kiSpriteID, const int _kiMaskID);
+	virtual bool Initialise(int _iDrawX, int _iDrawY);
 	virtual void Draw();
 	virtual void Process(float _fDeltaTick);
 
@@ -32,7 +33,9 @@ public:
 	//		Select top card
 	//		Set CLevel::m_pSelectedCard to card
 
-	stack<CCard*> m_pDeck;
+	vector<CCard*> m_pDeck;
 	stack<CCard*> m_pDraw;
+
+
 };
 

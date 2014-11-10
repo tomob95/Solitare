@@ -48,9 +48,6 @@
     <ClCompile Include="Column.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Draw.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Card.h">
@@ -89,9 +86,6 @@
     <ClInclude Include="Column.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Draw.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Solitare.rc">
@@ -100,6 +94,15 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="bitmap1.bmp">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="images\spr_CardBack.bmp">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="images\SpriteSheet.bmp">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="images\CardMask.bmp">
       <Filter>Resource Files</Filter>
     </None>
   </ItemGroup>

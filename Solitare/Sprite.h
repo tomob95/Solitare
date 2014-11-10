@@ -14,7 +14,8 @@ class CSprite
 public:
 	CSprite();
 	~CSprite();
-	bool Initialise(int _iResourceID, int _iMaskResourceID);
+//	bool Initialise(int _iResourceID, int _iMaskResourceID);
+	bool Initialise(int _iDrawX, int _iDrawY);
 	void Draw();
 	void Process(float _fDeltaTick);
 	int GetWidth() const;
@@ -23,6 +24,10 @@ public:
 	int GetY() const;
 	void SetX(int _i);
 	void SetY(int _i);
+	int GetDrawX() const;
+	int GetDrawY() const;
+	void SetDrawX(int _i);
+	void SetDrawY(int _i);
 	void TranslateRelative(int _iX, int _iY);
 	void TranslateAbsolute(int _iX, int _iY);
 protected:
@@ -36,10 +41,12 @@ protected:
 //Center handle
 	int m_iX;
 	int m_iY;
+	int m_iDrawX;
+	int m_iDrawY;
 	HBITMAP m_hSprite;
-	HBITMAP m_hMask;
+	//HBITMAP m_hMask;
 	BITMAP m_bitmapSprite;
-	BITMAP m_bitmapMask;
+	//BITMAP m_bitmapMask;
 	static HDC s_hSharedSpriteDC;
 	static int s_iRefCount;
 private:
