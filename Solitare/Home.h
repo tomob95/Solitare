@@ -2,7 +2,7 @@
 #include "Card.h"
 #include "Entity.h"
 #include "utils.h"
-#include <stack>
+#include <list>
 
 class CHome : public CEntity
 {
@@ -14,8 +14,9 @@ public:
 	virtual void Draw();
 	virtual void Process(float _fDeltaTick);
 	CCard* GetTopCard();
+	bool IsEmpty();
 	
 	eSuit m_eSuit;
-	std::stack<CCard*> m_pHome;
+	std::list<CCard*> m_pHome;
 };
 

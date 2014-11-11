@@ -1,11 +1,9 @@
 #include "Deck.h"
 #include "utils.h"
 
-
 CDeck::CDeck(void)
 {
 }
-
 
 CDeck::~CDeck(void)
 {

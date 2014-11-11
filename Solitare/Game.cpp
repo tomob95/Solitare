@@ -25,8 +25,10 @@ CGame::~CGame()
 {
 	delete m_pLevel;
 	m_pLevel = 0;
+
 	delete m_pBackBuffer;
 	m_pBackBuffer = 0;
+
 	delete m_pClock;
 	m_pClock = 0;
 }

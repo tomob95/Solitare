@@ -9,6 +9,7 @@
 #include "backbuffer.h"
 #include "Deck.h"
 #include "Column.h"
+#include "Home.h"
 // This Include
 #include "Level.h"
 // Static Variables
@@ -79,7 +80,6 @@ bool CLevel::Initialise(int _iWidth, int _iHeight)
 		_TempColumn->SetX(40 + (i * 165));
 		_TempColumn->SetY(300);
 	}
-
 	//Shuffle the cards in the deck
 	std::random_shuffle(m_pDeck->m_pDeck.begin(), m_pDeck->m_pDeck.end());
 
@@ -101,6 +101,17 @@ bool CLevel::Initialise(int _iWidth, int _iHeight)
 				_TempCard->SetFaceUp(false);
 			}
 		}
+	}
+
+	CHome* _TempHome;
+	//Create each Ace Pile
+	for(int i = 0; i < 4; i++)
+	{
+		_TempHome = new CHome();
+		_TempHome->Initialise(6, 4);
+		m_pAceHomes.push_back(_TempHome);
+		_TempHome->SetX(150 + (i * 165));
+		_TempHome->SetY(40);
 	}
 
 	/*
@@ -150,10 +161,17 @@ void CLevel::Draw()
 	DrawScore();
 	*/
 	m_pDeck->Draw();
+	// Draw the columns
 	for(int i=0; i<7; i++)
 	{
 		m_pColumns[i]->Draw();
 	}
+	// Draw the Ace Homes
+	for(int i=4; i<4; i++)
+	{
+		m_pAceHomes[i]->Draw();
+	}
+
 	if(!m_pDraggedCards.empty())
 	{
 		for(int i=m_pDraggedCards.size()-1; i>=0; i--)
@@ -170,11 +188,19 @@ void CLevel::Process(float _fDeltaTick)
 		HandleMouseDrag();
 	}
 	ProcessCheckForWin();
+
 	m_pDeck->Process(_fDeltaTick);
+
 	for (int i = 0; i < 7; i++)
 	{
 		m_pColumns[i]->Process(_fDeltaTick);
 	}
+
+	for (int j = 0; j < 4; j++)
+	{
+		m_pAceHomes[j]->Process(_fDeltaTick);
+	}
+
 	for(unsigned int i=0; i<m_pDraggedCards.size(); i++)
 	{
 		m_pDraggedCards[i]->SetX(m_fMouseX - (CARD_WIDTH / 2));
@@ -259,7 +285,6 @@ void CLevel::HandleMouseDrag()
 		}
 	}
 }
-
 
 void CLevel::DrawScore()
 {

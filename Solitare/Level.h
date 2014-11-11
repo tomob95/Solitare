@@ -40,6 +40,7 @@ public:
 protected:
 	CDeck* m_pDeck;
 	std::vector<CColumn*> m_pColumns;
+	std::vector<CHome*> m_pAceHomes;
 	std::vector<CCard*> m_pDraggedCards;
 	int m_iDraggedCardsLastColumn;
 	int m_iWidth;
