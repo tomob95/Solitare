@@ -253,12 +253,6 @@ void CLevel::HandleMouseDrag()
 	//Make sure none of the cards are already being dragged
 	if(m_pDraggedCards.empty())
 	{
-		//iterate through all the columns
-	//Iterate through all columns
-	//if top card
-	//See if the mouse is within the bounds of the top card
-	if(m_pDraggedCards.empty())
-	{
 		// Iterate through all columns
 
 		for(int i=0; i<7; i++)
@@ -292,15 +286,6 @@ void CLevel::HandleMouseDrag()
 				}
 			}
 
-
-			//Get coords of front card
-			int _FrontCardX = m_pColumns[i]->GetTopCard()->GetX();
-			int _FrontCardY = m_pColumns[i]->GetTopCard()->GetY();
-			//If the mouse is within the bounds of the front card
-			if((m_fMouseX >= _FrontCardX) && (m_fMouseX < _FrontCardX+CARD_WIDTH)
-				&& (m_fMouseY >= _FrontCardY) && (m_fMouseY < _FrontCardY+CARD_HEIGHT))
-			{
-				//Set card dragged to true
 
 			// Set int as x & y pos of top card in column
 			int _FrontCardX = m_pColumns[i]->GetTopCard()->GetX();
