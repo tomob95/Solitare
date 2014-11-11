@@ -1,3 +1,17 @@
+//
+// Bachelor of Software Engineering
+// Media Design School
+// Auckland
+// New Zealand
+//
+// 2014 (c) Media Design School
+//
+// File Name	: BackBuffer.cpp
+// Description	: Implementation for the BackBuffer class
+// Author		: Tom O'Brien, Kelsey Scheurich, Tom Butler
+// Mail			: kelsey.scheurich@mediadesign.school.nz
+//
+
 // Library Includes
 
 // Local Includes
