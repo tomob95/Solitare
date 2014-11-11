@@ -1,7 +1,22 @@
+//
+// Bachelor of Software Engineering
+// Media Design School
+// Auckland
+// New Zealand
+//
+// 2014 (c) Media Design School
+//
+// File Name	: Level.cpp
+// Description	: Implementation for the level class
+// Author		: Tom O'Brien, Kelsey Scheurich, Tom Butler
+// Mail			: kelsey.scheurich@mediadesign.school.nz
+//
+
 // Library Includes
 #include <locale>
 #include <codecvt>
 #include <algorithm>
+
 // Local Includes
 #include "Game.h"
 #include "resource.h"
@@ -9,51 +24,61 @@
 #include "backbuffer.h"
 #include "Deck.h"
 #include "Column.h"
+
 // This Include
 #include "Level.h"
-// Static Variables
-
-// Static Function Prototypes
 
 // Implementation
 
 #define CHEAT_BOUNCE_ON_BACK_WALL
 
-CLevel::CLevel()
-: m_pDeck(0)
-, m_iWidth(0)
-, m_iHeight(0)
-, m_bMouseDown(false){}
+/***********************
 
-CLevel::~CLevel()
+ * CLevel: Class constructor
+ * @author: Kelsey Scheurich
+
+ ********************/
+CLevel::CLevel()
+	: m_pDeck(0),	// Default all to 0
+	  m_iWidth(0),
+	  m_iHeight(0),
+	  m_bMouseDown(false)
 {
-	/*
-	while (m_vecBricks.size() > 0)
-	{
-		CBrick* pBrick = m_vecBricks[m_vecBricks.size() - 1];
-		m_vecBricks.pop_back();
-		delete pBrick;
-	}
-	delete m_pPaddle;
-	m_pPaddle = 0;
-	delete m_pBall;
-	m_pBall = 0;
-	*/
 }
 
+/***********************
+
+ * ~CLevel: Class destructor
+ * @author: 
+
+ ********************/
+CLevel::~CLevel()
+{
+}
+
+/***********************
+
+ * Initialise: Initialise level
+ * @author: 
+ * @parameter: int _iWidth, width of level
+ *				int _iHeight, height of level
+
+ ********************/
 bool CLevel::Initialise(int _iWidth, int _iHeight)
 {
+	// Set width and height
 	m_iWidth = _iWidth;
 	m_iHeight = _iHeight;
 
-	const float fBallVelX = 200.0f;
-	const float fBallVelY = 75.0f;
-
+	// Create new deck, set as member
 	m_pDeck = new CDeck();
+	// Validate and intialise deck
 	VALIDATE(m_pDeck->Initialise(0, 4));
+	// Set deck x & y position
 	m_pDeck->SetX(40);
 	m_pDeck->SetY(40);
 
+	// Create temp pointers for card and column
 	CCard* _TempCard;
 	CColumn* _TempColumn;
 
@@ -64,6 +89,7 @@ bool CLevel::Initialise(int _iWidth, int _iHeight)
 	{
 		for (int j = 0; j < 13; j++)
 		{
+			// Create new card, initialise and add to deck
 			_TempCard = new CCard(j, i);
 			_TempCard->Initialise(j, i);
 			m_pDeck->m_pDeck.push_back(_TempCard);
@@ -73,6 +99,7 @@ bool CLevel::Initialise(int _iWidth, int _iHeight)
 	//Create each column
 	for(int i=0; i<7; i++)
 	{
+		// Create new column, initialise and set x & y
 		_TempColumn = new CColumn();
 		_TempColumn->Initialise(0,5);
 		m_pColumns.push_back(_TempColumn);
@@ -83,134 +110,127 @@ bool CLevel::Initialise(int _iWidth, int _iHeight)
 	//Shuffle the cards in the deck
 	std::random_shuffle(m_pDeck->m_pDeck.begin(), m_pDeck->m_pDeck.end());
 
-
 	for(int i = 0; i < 7; i++)
 	{
 		//deal cards into the columns
 		for(int j=0; j < i+1; j++)
 		{
+			// Set temp card to back of deck
 			_TempCard = m_pDeck->m_pDeck.back();
+			// Pop
 			m_pDeck->m_pDeck.pop_back();
+			// Push temp card to the column piles
 			m_pColumns[i]->m_pPile.push_back(_TempCard);
+			// If its the last card of the column
 			if(j == i)
 			{
+				// Set as face up
 				_TempCard->SetFaceUp(true);
 			}
 			else
 			{
+				// Set as face down
 				_TempCard->SetFaceUp(false);
 			}
 		}
 	}
 
-	/*
-	m_pPaddle = new CPaddle();
-	VALIDATE(m_pPaddle->Initialise());
-
-	// Set the paddle's position to be centered on the x,
-	// and a little bit up from the bottom of the window.
-	m_pPaddle->SetX(_iWidth / 2.0f);
-	m_pPaddle->SetY(_iHeight - ( 4 * m_pPaddle->GetHeight()));
-
-	const int kiNumBricks = 36;
-	const int kiStartX = 20;
-	const int kiGap = 5;
-
-	int iCurrentX = kiStartX;
-	int iCurrentY = kiStartX;
-
-	for (int i = 0; i < kiNumBricks; ++i)
-	{
-		CBrick* pBrick = new CBrick();
-		VALIDATE(pBrick->Initialise());
-		pBrick->SetX(static_cast<float>(iCurrentX));
-		pBrick->SetY(static_cast<float>(iCurrentY));
-		iCurrentX += static_cast<int>(pBrick->GetWidth()) + kiGap;
-		if (iCurrentX > _iWidth)
-		{
-			iCurrentX = kiStartX;
-			iCurrentY += 20;
-		}
-		m_vecBricks.push_back(pBrick);
-	}
-	SetBricksRemaining(kiNumBricks);
-	*/
 	return (true);
 }
 
+/***********************
+
+ * Draw: Draw cards
+ * @author: 
+
+ ********************/
 void CLevel::Draw()
 {
-	/*
-	for (unsigned int i = 0; i < m_vecBricks.size(); ++i)
-	{
-		m_vecBricks[i]->Draw();
-	}
-	m_pPaddle->Draw();
-	m_pBall->Draw();
-	DrawScore();
-	*/
+	// Call draw recursively
 	m_pDeck->Draw();
+	// For each column
 	for(int i=0; i<7; i++)
 	{
+		// Call draw
 		m_pColumns[i]->Draw();
 	}
+	// If the dragged cards pile is not empty
 	if(!m_pDraggedCards.empty())
 	{
+		// For each card in the pile
 		for(int i=m_pDraggedCards.size()-1; i>=0; i--)
 		{
+			// Call draw
 			m_pDraggedCards[i]->Draw();
 		}
 	}
 }
 
+/***********************
+
+ * Process: Process level
+ * @author: 
+ * @parameters: float _fDeltaTick, current delta tick value
+
+ ********************/
 void CLevel::Process(float _fDeltaTick)
 {
+	// If the mouse is down
 	if(m_bMouseDown)
 	{
+		// Start drag
 		HandleMouseDrag();
 	}
+	// Check if game is over
 	ProcessCheckForWin();
+
+	// Call process recursively
 	m_pDeck->Process(_fDeltaTick);
+	
+	// For each column
 	for (int i = 0; i < 7; i++)
 	{
+		// Process
 		m_pColumns[i]->Process(_fDeltaTick);
 	}
+
+	// For each card being dragged
 	for(unsigned int i=0; i<m_pDraggedCards.size(); i++)
 	{
+		// Update x & y pos
 		m_pDraggedCards[i]->SetX(m_fMouseX - (CARD_WIDTH / 2));
 		m_pDraggedCards[i]->SetY(m_fMouseY - 29 + (m_pDraggedCards.size() -1 - i) * 58);
+		// Process
 		m_pDraggedCards[i]->Process(_fDeltaTick);
 	}
-	//for (unsigned int i = 0; i < m_vecBricks.size(); ++i)
-	//{
-	//	m_vecBricks[i]->Process(_fDeltaTick);
-	//}
-
-	//m_pPaddle->Process(_fDeltaTick);
-	//m_pBall->Process(_fDeltaTick);
 }
 
+/***********************
+
+ * ProcessCheckForWin: Check if game is over
+ * @author: 
+
+ ********************/
 void CLevel::ProcessCheckForWin()
 {
-	//for (unsigned int i = 0; i < m_vecBricks.size(); ++i)
-	//{
-	//	if (!m_vecBricks[i]->IsHit())
-	//	{
-	//		return;
-	//	}
-	//}
-	//CGame::GetInstance().GameOverWon();
+	//TODO: this
 }
 
+/***********************
+
+ * HandleMouseDrag: Function to handle dragging mouse
+ * @author: 
+
+ ********************/
 void CLevel::HandleMouseDrag()
 {
 
 	//Iterate through all columns
 	//if top card
-		//See if the mouse is within the bounds of the top card
-//	MessageBox(0, L"Mouse is being dragged", L"Debug", MB_OK);
+	//See if the mouse is within the bounds of the top card
 	if(m_pDraggedCards.empty())
 	{
+		// Iterate through all columns
 		for(int i=0; i<7; i++)
 		{
 			for(unsigned int j=0; j<m_pColumns[i]->m_pPile.size()-1; j++)
@@ -240,18 +260,20 @@ void CLevel::HandleMouseDrag()
 					}
 				}
 			}
+			// Set int as x & y pos of top card in column
 			int _FrontCardX = m_pColumns[i]->GetTopCard()->GetX();
 			int _FrontCardY = m_pColumns[i]->GetTopCard()->GetY();
+
+			// If mouse is within bounds
 			if((m_fMouseX >= _FrontCardX) && (m_fMouseX < _FrontCardX+CARD_WIDTH)
 				&& (m_fMouseY >= _FrontCardY) && (m_fMouseY < _FrontCardY+CARD_HEIGHT))
 			{
-				//MessageBox(0, L"Mouse is being dragged", L"Debug", MB_OK);
-
+				// Drag the card, add to dragged pile vector
 				m_pColumns[i]->GetTopCard()->SetDragged(true);
-				//m_pDraggedCards.insert(m_pDraggedCards.begin(), m_pColumns[i]->GetTopCard());
 				m_pDraggedCards.push_back(m_pColumns[i]->m_pPile.back());
 				m_pColumns[i]->m_pPile.pop_back();
 				m_iDraggedCardsLastColumn = i;
+
 				return;
 			
 			}
@@ -260,30 +282,56 @@ void CLevel::HandleMouseDrag()
 	}
 }
 
+/***********************
 
+ * DrawScore: Draw the score to the screen
+ * @author: 
+
+ ********************/
 void CLevel::DrawScore()
 {
+	// Get handler from game
 	HDC hdc = CGame::GetInstance().GetBackBuffer()->GetBFDC();
+
+	// Create x & y pos
 	const int kiX = 0;
 	const int kiY = m_iHeight - 50;
 	
+	// Output text
 	TextOut(hdc, kiX, kiY, m_strScore.c_str(), static_cast<int>(m_strScore.size()));
 }
 
+/***********************
+
+ * SetMouseCoords: Set the x & y pos of the mouse
+ * @author: 
+
+ ********************/
 void CLevel::SetMouseCoords(int _x, int _y)
 {
+	// Set as member variables
 	m_fMouseX = _x;
 	m_fMouseY = _y;
 }
 
+/***********************
 
+ * UpdateScoreText: Update the score text
+ * @author: 
+
+ ********************/
 void CLevel::UpdateScoreText()
 {
-	//std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> converter;
-	//m_strScore = L"Bricks Remaining: ";
-	//m_strScore += converter.from_bytes(ToString(GetBricksRemaining()));
+	// TODO: this
 }
 
+/***********************
+
+ * SetMouseDown: Set the mouse down as ture
+ * @author: 
+ * @parameter: bool _bMouseDown, bool to set member variable as
+
+ ********************/
 void CLevel::SetMouseDown(bool _bMouseDown)
 {
 	m_bMouseDown = _bMouseDown;
