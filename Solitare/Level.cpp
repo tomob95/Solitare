@@ -82,9 +82,10 @@ bool CLevel::Initialise(int _iWidth, int _iHeight)
 	m_pDeck->SetX(40);
 	m_pDeck->SetY(40);
 
-	// Create temp pointers for card and column
+	// Create temp pointers for card, column and the home piles
 	CCard* _TempCard;
 	CColumn* _TempColumn;
+	CHome* _TempHome;
 
 	//Initialise the cards here
 	
@@ -138,23 +139,20 @@ bool CLevel::Initialise(int _iWidth, int _iHeight)
 		}
 	}
 
-	CHome* _TempHome;
+
 	//Create each Ace Pile
 	for(int i = 0; i < 4; i++)
 	{
 		_TempHome = new CHome();
 		_TempHome->Initialise(6, 4);
 		m_pAceHomes.push_back(_TempHome);
-		_TempHome->SetX(150 + (i * 165));
+		_TempHome->SetX(535 + (i * 165));
 		_TempHome->SetY(40);
+		_TempHome->SetDrawX((2 + i) * CARD_WIDTH);
+		_TempHome->SetDrawY(4 * CARD_HEIGHT);
 	}
 
-	/*
-	m_pPaddle = new CPaddle();
-	VALIDATE(m_pPaddle->Initialise());
-
-
-	return (true);
+	return (true); 
 }
 
 /***********************
@@ -178,7 +176,7 @@ void CLevel::Draw()
 	}
 
 	// Draw the Ace Homes
-	for(int i=4; i<4; i++)
+	for(int i=0; i<4; i++)
 	{
 		m_pAceHomes[i]->Draw();
 	}
@@ -212,11 +210,11 @@ void CLevel::Process(float _fDeltaTick)
 		// Start drag
 		HandleMouseDrag();
 	}
-
 	else if (!m_pDraggedCards.empty())
 	{
 		HandleMouseDrop();
 	}
+
 	ProcessCheckForWin();
 
 	//Process the deck
@@ -231,20 +229,33 @@ void CLevel::Process(float _fDeltaTick)
 	m_pDeck->Process(_fDeltaTick);
 	
 	// For each column
-
 	for (int i = 0; i < 7; i++)
 	{
 		// Process
 		m_pColumns[i]->Process(_fDeltaTick);
 	}
 
+	//For each home cell
 	for (int j = 0; j < 4; j++)
 	{
-		m_pAceHomes[j]->Process(_fDeltaTick);
+		if(m_pAceHomes[j]->IsEmpty())
+		{
+			m_pAceHomes[j]->SetDrawX((2 + j) * CARD_WIDTH);
+			m_pAceHomes[j]->SetDrawY(4 * CARD_HEIGHT);
+			m_pAceHomes[j]->Process(_fDeltaTick);
+		}
+		else
+		{
+			for(unsigned int i = 0; i<m_pAceHomes[j]->m_pHome.size(); i++)
+			{
+				m_pAceHomes[j]->m_pHome[i]->SetX(m_pAceHomes[j]->GetX());
+				m_pAceHomes[j]->m_pHome[i]->SetY(m_pAceHomes[j]->GetY());
+				m_pAceHomes[j]->m_pHome[i]->Process(_fDeltaTick);
+			}
+		};
 	}
 
 	//Process the cards that are being dragged
-
 	// For each card being dragged
 	for(unsigned int i=0; i<m_pDraggedCards.size(); i++)
 	{
@@ -280,7 +291,6 @@ void CLevel::HandleMouseDrag()
 	if(m_pDraggedCards.empty())
 	{
 		// Iterate through all columns
-
 		for(int i=0; i<7; i++)
 		{
 			//See if they have selected a stack of cards
@@ -402,7 +412,54 @@ void CLevel::HandleMouseDrop()
 		}
 	}
 
-	//Release on ace pile
+	//Release one card onto the ace pile
+	if(m_pDraggedCards.size() == 1)
+	{
+		for(unsigned int i = 0; i < 4; i++)
+		{
+			_iColumnX = m_pAceHomes[i]->GetX();
+			_iColumnY = m_pAceHomes[i]->GetY();
+
+			//Mouse is within the bounds of the home pile
+			if ((m_fMouseX >= _iColumnX) && (m_fMouseX < _iColumnX + CARD_WIDTH)
+			&& (m_fMouseY >= _iColumnY) && (m_fMouseY < _iColumnY + CARD_HEIGHT))
+			{
+				if(m_pAceHomes[i]->IsEmpty() && (m_pDraggedCards.back()->GetFace() == 0) && (m_pDraggedCards.back()->GetSuit() == i))
+				{
+					CCard* _pTemp = m_pDraggedCards.back();
+					m_pDraggedCards.pop_back();
+					_pTemp->SetDragged(false);
+					m_pAceHomes[i]->m_pHome.push_back(_pTemp);
+					_pTemp = nullptr;
+					if(!m_pColumns[m_iDraggedCardsLastColumn]->IsEmpty())
+					{
+						m_pColumns[m_iDraggedCardsLastColumn]->GetTopCard()->SetFaceUp(true);	
+					}
+					return;
+				}
+				CCard* _TempCard = m_pAceHomes[i]->GetTopCard();
+				//If the card is one higher than the current top of the pile
+				//AND if it is the correct suit
+				if((_TempCard->GetFace() == m_pDraggedCards.front()->GetFace()-1) && (m_pDraggedCards.back()->GetSuit() == i))
+				{
+					CCard* _pTemp = m_pDraggedCards.back();
+					m_pDraggedCards.pop_back();
+					_pTemp->SetDragged(false);
+					m_pAceHomes[i]->m_pHome.push_back(_pTemp);
+					_pTemp = nullptr;
+					if(!m_pColumns[m_iDraggedCardsLastColumn]->IsEmpty())
+					{
+						m_pColumns[m_iDraggedCardsLastColumn]->GetTopCard()->SetFaceUp(true);	
+					}
+					return;
+				}
+			}
+		}
+	}
+		
+
+
+
 
 	//The mouse wasnt released on anything
 	//Return cards to their previous pile

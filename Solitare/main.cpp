@@ -92,7 +92,7 @@ LRESULT CALLBACK WindowProc(HWND _hwnd,	UINT _msg,	WPARAM _wparam,	LPARAM _lpara
 
 		// Set mousedown to true for game instance
 		CGame::GetInstance().SetMouseDown(false);
-		CGame::GetInstance().GetLevel()->HandleMouseDrop();
+		//CGame::GetInstance().GetLevel()->HandleMouseDrop();
 	}
 		break;
 

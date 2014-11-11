@@ -34,7 +34,19 @@ bool CHome::Initialise(int _iDrawX, int _iDrawY)
 
 void CHome::Draw()
 {
-	CEntity::Draw();
+	if(IsEmpty())
+	{
+		CEntity::Draw();
+	}
+	else
+	{
+		GetTopCard()->Draw();
+	}
+}
+
+CCard* CHome::GetTopCard()
+{
+	return m_pHome.back();
 }
 
 void CHome::Process(float _fDeltaTick)
@@ -42,15 +54,15 @@ void CHome::Process(float _fDeltaTick)
 	if (IsEmpty())
 	{
 		//Set Sprite to the empty sprite
-		CEntity::SetDrawX(6 * CARD_WIDTH);
-		CEntity::SetDrawY(4 * CARD_HEIGHT);
+		//CEntity::SetDrawX(6 * CARD_WIDTH);
+		//CEntity::SetDrawY(4 * CARD_HEIGHT);
 	}
-	else
+	/*else
 	{
 		//draw card back sprite
 		SetDrawX(BACK_X);
 		SetDrawY(BACK_Y);
-		/*if(CCard().GetDragged() == true)
+		if(CCard().GetDragged() == true)
 		{
 			switch(CCard().GetFace())
 			{
@@ -147,11 +159,11 @@ void CHome::Process(float _fDeltaTick)
 				}
 				break;
 			}
-		}*/
-	}
+		}
+	}*/
 }
 
 bool CHome::IsEmpty()
 {
-	return m_pHome.empty();
+	return (m_pHome.empty());
 }

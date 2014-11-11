@@ -2,7 +2,7 @@
 #include "Card.h"
 #include "Entity.h"
 #include "utils.h"
-#include <list>
+#include <vector>
 
 class CHome : public CEntity
 {
@@ -17,6 +17,6 @@ public:
 	bool IsEmpty();
 	
 	eSuit m_eSuit;
-	std::list<CCard*> m_pHome;
+	std::vector<CCard*> m_pHome;
 };
 
