@@ -7,6 +7,7 @@
 #include <ctime>
 
 #include "Game.h"
+#include "Level.h"
 #include "utils.h"
 #include "resource.h"
 
@@ -55,8 +56,9 @@ LRESULT CALLBACK WindowProc(HWND _hwnd,	UINT _msg,	WPARAM _wparam,	LPARAM _lpara
 		break;
 
 	case WM_LBUTTONUP:
-		{
+	{
 		CGame::GetInstance().SetMouseDown(false);
+		CGame::GetInstance().GetLevel()->HandleMouseDrop();
 	}
 		break;
 

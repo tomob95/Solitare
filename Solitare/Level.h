@@ -26,6 +26,8 @@ public:
 	CDeck* GetDeck() const;
 	void SetMouseCoords(int _x, int _y);
 	void HandleMouseDrag();
+	void HandleMouseDrop();
+	bool CheckCardToColumn(CCard* _pSource, CCard* _pDestination);
 	void SetMouseDown(bool _bMouseDown);
 protected:
 	void ProcessCheckForWin();

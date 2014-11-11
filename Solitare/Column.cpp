@@ -52,11 +52,15 @@ void CColumn::Process(float _fDeltaTick)
 				m_pPile[i]->SetDrawX(BACK_X);
 				m_pPile[i]->SetDrawY(BACK_Y);
 			}
-		//	if(!m_pPile[i]->GetDragged())
-		//	{
-				m_pPile[i]->SetX(static_cast<int>(GetX()));
-				m_pPile[i]->SetY(static_cast<int>(GetY() + (i * 58)));
-		//	}
+			else
+			{
+				m_pPile[i]->SetDrawX(m_pPile[i]->GetFace() * CARD_WIDTH);
+				m_pPile[i]->SetDrawY(m_pPile[i]->GetSuit() * CARD_HEIGHT);
+			}
+
+
+			m_pPile[i]->SetX(static_cast<int>(GetX()));
+			m_pPile[i]->SetY(static_cast<int>(GetY() + (i * 58)));
 			m_pPile[i]->Process(_fDeltaTick);
 		}
 	}

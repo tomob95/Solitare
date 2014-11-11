@@ -22,22 +22,22 @@ void CCard::Process(float _fDeltaTick)
 
 int CCard::GetFace()
 {
-	return 0;
+	return m_iFace;
 }
 
 void CCard::SetFace(int _iFace)
 {
-		
+	m_iFace = _iFace;	
 }
 
 int CCard::GetSuit()
 {
-	return 0;
+	return m_iSuit;
 }
 
 void CCard::SetSuit(int _iSuit)
 {
-	
+	m_iSuit = _iSuit;
 }
 
 int CCard::GetFaceUp()
