@@ -1,4 +1,20 @@
+//
+// Bachelor of Software Engineering
+// Media Design School
+// Auckland
+// New Zealand
+//
+// 2014 (c) Media Design School
+//
+// File Name	: BackBuffer.cpp
+// Description	: Implementation for the BackBuffer class
+// Author		: Tom O'Brien, Kelsey Scheurich, Tom Butler
+// Mail			: kelsey.scheurich@mediadesign.school.nz
+//
+
 #define WIN32_LEAN_AND_MEAN
+
+// Library includes
 #include <windows.h> // Include all the windows headers.
 #include <windowsx.h> // Include useful macros.
 #include <vector>
@@ -6,7 +22,9 @@
 #include <locale>
 #include <ctime>
 
+// Local includes
 #include "Game.h"
+#include "Level.h"
 #include "utils.h"
 #include "resource.h"
 
@@ -14,12 +32,23 @@
 
 //Struct and Enum Declarations
 
+/***********************
+
+ * FuncName: Function operation
+ * @parameter: HWND _hwnd, window handler
+				UINT _msg, message
+				WPARAM _wparam,	
+				LPARAM _lparam
+ * @return:
+
+ ********************/
 LRESULT CALLBACK WindowProc(HWND _hwnd,	UINT _msg,	WPARAM _wparam,	LPARAM _lparam)
 {
 
 	// This is the main message handler of the system.
 	PAINTSTRUCT ps; // Used in WM_PAINT.
 	HDC hdc; // Handle to a device context.
+
 	// What is the message?
 	switch (_msg)
 	{
@@ -32,31 +61,38 @@ LRESULT CALLBACK WindowProc(HWND _hwnd,	UINT _msg,	WPARAM _wparam,	LPARAM _lpara
 		break;
 	case WM_PAINT:
 	{
-		// Simply validate the window.
+		// Validate the window.
 		hdc = BeginPaint(_hwnd, &ps);
-		// You would do all your painting here...
+		// All painting here
 		EndPaint(_hwnd, &ps);
 		// Return Success.
 		return (0);
 	}
 		break;
 
+	// On mouse move
 	case WM_MOUSEMOVE:
 	{
+		// Call GetInstance of game and set new mouse coordinates
 		CGame::GetInstance().SetMouseCoords(LOWORD(_lparam), HIWORD(_lparam));
 	}
 		break;
 
+	// If left mouse button is pressed
 	case WM_LBUTTONDOWN:
 	{
-		//CGame::GetInstance().SetMouseCoords(LOWORD(_lparam), HIWORD(_lparam));
+		// Set mousedown to true for game instance
 		CGame::GetInstance().SetMouseDown(true);
 	}
 		break;
 
+	// If left mouse button is released
 	case WM_LBUTTONUP:
-		{
+	{
+
+		// Set mousedown to true for game instance
 		CGame::GetInstance().SetMouseDown(false);
+		CGame::GetInstance().GetLevel()->HandleMouseDrop();
 	}
 		break;
 
@@ -70,19 +106,32 @@ LRESULT CALLBACK WindowProc(HWND _hwnd,	UINT _msg,	WPARAM _wparam,	LPARAM _lpara
 		break;
 	default:break;
 	} // End switch.
+
 	// Process any messages that we did not take care of...
-		return (DefWindowProc(_hwnd, _msg, _wparam, _lparam));
+	return (DefWindowProc(_hwnd, _msg, _wparam, _lparam));
 }
+
+/***********************
+
+ * WinMain: Main function for window
+ * @parameter: HINSTANCE _hInstance, game instance
+ *				HINSTANCE _hPrevInstance, previous instance
+ *				LPSTR _lpCmdLine, command line
+ *				int _nCmdShow, command show
+ * @return:
+
+ ********************/
 int WINAPI WinMain(HINSTANCE _hInstance, HINSTANCE _hPrevInstance,	LPSTR _lpCmdLine,	int _nCmdShow)
 {
-	WNDCLASSEX winclass; // This will hold the class we create.
-	//HWND hwnd;
+	// This will hold the class we create.
+	WNDCLASSEX winclass; 
 	MSG msg; // Generic message.
 
+	// Create const ints for window width and height
 	const int WINDOW_WIDTH = 1300;
 	const int WINDOW_HEIGHT = 900;
 
-	// First fill in the window class structure.
+	// Window class structure.
 	winclass.cbSize = sizeof(WNDCLASSEX);
 	winclass.style = CS_DBLCLKS | CS_OWNDC | CS_HREDRAW | CS_VREDRAW;
 	winclass.lpfnWndProc = WindowProc;
@@ -91,31 +140,36 @@ int WINAPI WinMain(HINSTANCE _hInstance, HINSTANCE _hPrevInstance,	LPSTR _lpCmdL
 	winclass.hInstance = _hInstance;
 	winclass.hIcon = LoadIcon(NULL, IDI_APPLICATION);
 	winclass.hCursor = LoadCursor(NULL, IDC_ARROW);
-	winclass.hbrBackground =
-		CreateSolidBrush(RGB(41,63,151));
+	winclass.hbrBackground = CreateSolidBrush(RGB(41,63,151));
 	winclass.lpszMenuName = NULL;
 	winclass.lpszClassName = WINDOW_CLASS_NAME;
 	winclass.hIconSm = LoadIcon(NULL, IDI_APPLICATION);
+
 	// register the window class
 	if (!RegisterClassEx(&winclass))
 	{
 		return (0);
 	}
+
 	// create the window
-	hwnd =	CreateWindowEx(NULL, // Extended style.
-			WINDOW_CLASS_NAME, // Class.
-			L"Solitare", // Title.
+	hwnd =	CreateWindowEx(NULL,				// Extended style.
+			WINDOW_CLASS_NAME,					// Class.
+			L"Solitare",						// Title.
 			WS_OVERLAPPEDWINDOW | WS_VISIBLE,
-			0, 0, // Initial x,y.
-			WINDOW_WIDTH, WINDOW_HEIGHT, // Initial width, height.
-			NULL, // Handle to parent.
-			NULL, // Handle to menu.
-			_hInstance, // Instance of this application.
-			NULL); // Extra creation parameters.
+			0, 0,								// Initial x,y.
+			WINDOW_WIDTH, WINDOW_HEIGHT,		// Initial width, height.
+			NULL,								// Handle to parent.
+			NULL,								// Handle to menu.
+			_hInstance,							// Instance of this application.
+			NULL);								// Extra creation parameters.
+
+	// If there is no window
 	if (!(hwnd))
 	{
 		return (0);
 	}
+	
+	// Seed random
 	srand((unsigned int)time(0));
 
 	//Run the initialization, set up the game

@@ -25,7 +25,7 @@ std::string ToString(const T& _value)
 	return (theStream.str());
 };
 
-enum eSuit: int { SPADE = 0, CLUB, DIAMOND, HEART };
+enum eSuit: int { SPADE = 0, CLUB, HEART, DIAMOND };
 
 //std::wstring  wstrFace[] = { L"ACE", L"TWO", L"THREE", L"FOUR", L"FIVE", L"SIX", L"SEVEN", L"EIGHT", L"NINE", L"TEN", L"JACK", L"QUEEN", L"KING" };
 
