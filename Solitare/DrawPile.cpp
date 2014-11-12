@@ -37,6 +37,7 @@ CDrawPile::CDrawPile(void)
  ********************/
 CDrawPile::~CDrawPile(void)
 {
+
 }
 
 /***********************

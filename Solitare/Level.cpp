@@ -31,6 +31,7 @@
 #include "Level.h"
 
 // Implementation
+class CGame;
 
 #define CHEAT_BOUNCE_ON_BACK_WALL
 
@@ -56,6 +57,21 @@ CLevel::CLevel()
  ********************/
 CLevel::~CLevel()
 {
+	delete m_pDeck;
+	m_pDeck = 0;
+
+	delete m_pDraw;
+	m_pDraw = 0;
+
+	for(int i=0; i<7; i++)
+	{
+		delete m_pColumns[i];
+	}
+
+	for(int i=0; i<4; i++)
+	{
+		delete m_pAceHomes[i];
+	}
 }
 
 /***********************
@@ -93,17 +109,32 @@ bool CLevel::Initialise(int _iWidth, int _iHeight)
 	CColumn* _TempColumn;
 	CHome* _TempHome;
 	
-	//Create a card of each face and suit
-	for (int i = 0; i < 4; i++)
+
+	if(!CGame::GetInstance().IsDeckStored())
 	{
-		for (int j = 0; j < 13; j++)
+		//Create a card of each face and suit
+		for (int i = 0; i < 4; i++)
 		{
-			// Create new card, initialise and add to deck
-			_TempCard = new CCard(j, i);
-			_TempCard->Initialise(j, i);
-			m_pDeck->m_pDeck.push_back(_TempCard);
+			for (int j = 0; j < 13; j++)
+			{
+				// Create new card, initialise and add to deck
+				_TempCard = new CCard(j, i);
+				_TempCard->Initialise(j, i);
+				m_pDeck->m_pDeck.push_back(_TempCard);
+			}
 		}
+		//Shuffle the cards in the deck
+		// Comment out to test win
+		std::random_shuffle(m_pDeck->m_pDeck.begin(), m_pDeck->m_pDeck.end());
+
 	}
+	else
+	{
+		CGame::GetInstance().GetStoredDeck(m_pDeck->m_pDeck);
+	}
+
+	//Put a copy of the deck into the game for restarting the game
+	CGame::GetInstance().StoreGameDeck();
 
 	//Create each column
 	for(int i=0; i<7; i++)
@@ -116,9 +147,6 @@ bool CLevel::Initialise(int _iWidth, int _iHeight)
 		_TempColumn->SetY(300);
 	}
 
-	//Shuffle the cards in the deck
-	// Comment out to test win
-	//std::random_shuffle(m_pDeck->m_pDeck.begin(), m_pDeck->m_pDeck.end());
 
 	// Loop through each column
 	for(int i = 0; i < 7; i++)
@@ -213,7 +241,10 @@ void CLevel::Draw()
 void CLevel::Process(float _fDeltaTick)
 {
 	// Check if game is won
-	ProcessCheckForWin();
+	if(ProcessCheckForWin())
+	{
+		return;		
+	};
 
 	//Process the deck
 	m_pDeck->Process(_fDeltaTick);
@@ -267,7 +298,7 @@ void CLevel::Process(float _fDeltaTick)
  * @author: 
 
  ********************/
-void CLevel::ProcessCheckForWin()
+bool CLevel::ProcessCheckForWin()
 {
 	int iCheck = 0;
 	// Loop through all homes
@@ -294,16 +325,10 @@ void CLevel::ProcessCheckForWin()
 		// Create string
 		string _strGO = "You won, game over!";
 
-		// Create string, set x & y
-		RECT _rTextPos;
-		_rTextPos.top = kiY;
-		_rTextPos.left = kiX;
-
-		// Output text
-		DrawText(hdc, _strGO.c_str(), _strGO.size(),&_rTextPos, DT_SINGLELINE);
-		DrawScore();
-
+		DialogBox(CGame::GetInstance().GetAppInstance(), MAKEINTRESOURCE(IDD_DIALOG1), CGame::GetInstance().GetWindow(),  (DLGPROC)CGame::DlgProc);
+		return true;
 	}
+	return false;
 }
 
 /***********************
@@ -316,18 +341,6 @@ void CLevel::ProcessCheckForWin()
 bool CLevel::IsMouseDraggingCards()
 {
 	return (!m_pDraggedCards.empty());
-}
-
-/***********************
-
- * IsMouseDraggingCards: Check if the mouse is dragging cards
- * @author: 
- * @parameter: int _ColumnNo, 
-
- ********************/
-void CLevel::DragFromColumn(int _ColumnNo)
-{
-	// TODO: Do we need this?
 }
 
 /***********************
@@ -810,3 +823,17 @@ int CLevel::GetDeckY()
 {
 	return m_pDeck->GetY();
 }
+
+/*******************
+
+ * GetDeck: Return a copy of the deck
+ * @author: 
+ * @return: vector<CCard*>
+
+ ********************/
+void CLevel::GetDeck(vector<CCard*> &_Target)
+{
+	_Target.resize(52);
+	copy(m_pDeck->m_pDeck.begin(),m_pDeck->m_pDeck.end(),_Target.begin());
+}
+

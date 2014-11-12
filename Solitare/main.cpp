@@ -21,6 +21,7 @@
 #include <codecvt>
 #include <locale>
 #include <ctime>
+#include "vld.h"
 
 // Local includes
 #include "Game.h"
@@ -32,9 +33,11 @@
 
 //Struct and Enum Declarations
 
+
+
 /***********************
 
- * FuncName: Function operation
+ * WindowProc: Windows message handler
  * @parameter: HWND _hwnd, window handler
 				UINT _msg, message
 				WPARAM _wparam,	
@@ -67,6 +70,52 @@ LRESULT CALLBACK WindowProc(HWND _hwnd,	UINT _msg,	WPARAM _wparam,	LPARAM _lpara
 		EndPaint(_hwnd, &ps);
 		// Return Success.
 		return (0);
+	}
+		break;
+
+	case WM_COMMAND:
+		switch(_wparam)
+		{
+			case ID_FILE_EXIT:
+			{
+				PostQuitMessage(0);
+				return false;
+			}
+				break;
+			case ID_FILE_NEWGAME:
+			{
+				CGame::GetInstance().NewGame();
+				return true;
+			}
+				break;
+			case ID_FILE_RESTARTGAME:
+			{
+				CGame::GetInstance().RestartGame();
+				return true;
+			}
+				break;
+		}
+		break;
+
+	case WM_KEYDOWN:
+	{
+		switch(_wparam)
+		{
+		case VK_ESCAPE:
+			{
+				PostQuitMessage(0);
+			}
+		case VK_F2:
+			{
+				CGame::GetInstance().RestartGame();
+			}
+			break;
+		case VK_F1:
+			{
+				CGame::GetInstance().NewGame();
+			}
+			break;
+		}
 	}
 		break;
 
@@ -148,7 +197,7 @@ int WINAPI WinMain(HINSTANCE _hInstance, HINSTANCE _hPrevInstance,	LPSTR _lpCmdL
 	// This will hold the class we create.
 	WNDCLASSEX winclass; 
 	MSG msg; // Generic message.
-
+	HMENU Menu = LoadMenu(_hInstance, MAKEINTRESOURCE(IDR_MENU1));
 	// Create const ints for window width and height
 	const int WINDOW_WIDTH = 1300;
 	const int WINDOW_HEIGHT = 1080;
@@ -163,7 +212,7 @@ int WINAPI WinMain(HINSTANCE _hInstance, HINSTANCE _hPrevInstance,	LPSTR _lpCmdL
 	winclass.hIcon = LoadIcon(NULL, IDI_APPLICATION);
 	winclass.hCursor = LoadCursor(NULL, IDC_ARROW);
 	winclass.hbrBackground = CreateSolidBrush(RGB(41,63,151));
-	winclass.lpszMenuName = NULL;
+	winclass.lpszMenuName = MAKEINTRESOURCE(IDR_MENU1);
 	winclass.lpszClassName = WINDOW_CLASS_NAME;
 	winclass.hIconSm = LoadIcon(NULL, IDI_APPLICATION);
 
@@ -181,7 +230,7 @@ int WINAPI WinMain(HINSTANCE _hInstance, HINSTANCE _hPrevInstance,	LPSTR _lpCmdL
 			0, 0,								// Initial x,y.
 			WINDOW_WIDTH, WINDOW_HEIGHT,		// Initial width, height.
 			NULL,								// Handle to parent.
-			NULL,								// Handle to menu.
+			Menu,								// Handle to menu.
 			_hInstance,							// Instance of this application.
 			NULL);								// Extra creation parameters.
 
@@ -190,13 +239,23 @@ int WINAPI WinMain(HINSTANCE _hInstance, HINSTANCE _hPrevInstance,	LPSTR _lpCmdL
 	{
 		return (0);
 	}
+
+	//Get current monitor Height and Width
+	HMONITOR monitor = MonitorFromWindow(hwnd, MONITOR_DEFAULTTONEAREST);
+	MONITORINFO info;
+	info.cbSize = sizeof(MONITORINFO);
+	GetMonitorInfo(monitor, &info);
+	int monitor_width = info.rcMonitor.right - info.rcMonitor.left;
+	int monitor_height = info.rcMonitor.bottom - info.rcMonitor.top;
+	//Resize the window to the height of the monitor
+	SetWindowPos(hwnd,0,0,0,WINDOW_WIDTH,monitor_height-50,SWP_NOMOVE|SWP_NOZORDER|SWP_NOACTIVATE);	
 	
 	// Seed random
 	srand((unsigned int)time(0));
 
 	//Run the initialization, set up the game
 	CGame& Game = CGame::GetInstance();
-	Game.Initialise(_hInstance, hwnd, WINDOW_WIDTH, WINDOW_HEIGHT);
+	Game.Initialise(_hInstance, hwnd, WINDOW_WIDTH, monitor_height-50);
 	
 	// Enter main event loop
 	while (true)
@@ -218,5 +277,6 @@ int WINAPI WinMain(HINSTANCE _hInstance, HINSTANCE _hPrevInstance,	LPSTR _lpCmdL
 			Game.ExecuteOneFrame(); //One frame of game logic occurs here...
 	}
 	// Return to Windows like this...
+	delete &Game;
 	return (static_cast<int>(msg.wParam));
 }

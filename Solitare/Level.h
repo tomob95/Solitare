@@ -18,8 +18,10 @@
 #define __LEVEL_H__
 
 // Library Includes
+#include <Windows.h>
 #include <vector>
 #include <string>
+using namespace std;
 
 // Prototypes
 class CCard;
@@ -39,7 +41,7 @@ public:
 	bool Initialise(int _iWidth, int _iHeight);
 	void Draw();
 	void Process(float _fDeltaTick);
-	CDeck* GetDeck() const;
+	void GetDeck(vector<CCard*> &_Target);
 	void SetMouseCoords(int _x, int _y);
 	void HandleMouseDrag();
 	void HandleMouseDrop();
@@ -47,13 +49,13 @@ public:
 	void SetMouseDown(bool _bMouseDown);
 	bool GetMouseDown();
 	bool IsMouseDraggingCards();
-	void DragFromColumn(int _ColumnNo);
 	void DeckClick();
 	int GetDeckX();
 	int GetDeckY();
+	//static LRESULT CALLBACK DlgProc(HWND hWndDlg, UINT _msg, WPARAM _wparam, LPARAM _lparam);
 
 protected:
-	void ProcessCheckForWin();
+	bool ProcessCheckForWin();
 	void UpdateScoreText(int _iScore);
 	void DrawScore();
 

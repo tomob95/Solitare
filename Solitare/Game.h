@@ -19,11 +19,15 @@
 
 // Library Includes
 #include <windows.h>
+#include <vector>
 
 // Local Includes
 #include "clock.h"
+#include "resource.h"
+using namespace std;
 
 // Prototypes
+class CCard;
 class CLevel;
 class CBackBuffer;
 class CGame
@@ -41,12 +45,16 @@ public:
 	CLevel* GetLevel();
 	HINSTANCE GetAppInstance();
 	HWND GetWindow();
-	void GameOverWon();
-	void GameOverLost();
 	void SetMouseCoords(int _x, int _y);
 	void SetMouseDown(bool _bMouseDown);
 	bool GetMouseDown();
 	void HandleMouseDrag();
+	bool IsDeckStored();
+	void StoreGameDeck();
+	void GetStoredDeck(vector<CCard*> &_pTarget);
+	void RestartGame();
+	void NewGame();
+	static LRESULT CALLBACK DlgProc(HWND hWndDlg, UINT _msg, WPARAM _wparam, LPARAM _lparam);
 
 	// Singleton Methods
 	static CGame& GetInstance();
@@ -63,9 +71,13 @@ private:
 // Member Variables
 public:
 protected:
+	vector<CCard*> m_pStoredResetDeck;
 	CClock* m_pClock;
 	CLevel* m_pLevel;
 	CBackBuffer* m_pBackBuffer;
+	bool m_bDeckStored;
+	int m_iWidth;
+	int m_iHeight;
 
 	//Application data
 	HINSTANCE m_hApplicationInstance;

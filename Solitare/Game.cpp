@@ -13,13 +13,18 @@
 //
 
 // Library Includes
+#include <vector>
+
 // Local Includes
 #include "Clock.h"
+#include "Card.h"
 #include "Level.h"
 #include "BackBuffer.h"
 #include "utils.h"
 // This Include
 #include "Game.h"
+using namespace std;
+
 // Static Variables
 CGame* CGame::s_pGame = 0;
 // Static Function Prototypes
@@ -32,6 +37,7 @@ CGame::CGame()
 , m_hApplicationInstance(0)
 , m_hMainWindow(0)
 , m_pBackBuffer(0)
+, m_bDeckStored(false)
 {
 }
 
@@ -45,10 +51,18 @@ CGame::~CGame()
 
 	delete m_pClock;
 	m_pClock = 0;
+
+	for(unsigned int i=0; i<m_pStoredResetDeck.size(); i++)
+	{
+		delete m_pStoredResetDeck[i];
+	}
 }
 
 bool CGame::Initialise(HINSTANCE _hInstance, HWND _hWnd, int _iWidth, int _iHeight)
 {
+	m_iWidth = _iWidth;
+	m_iHeight = _iHeight;
+
 	m_hApplicationInstance = _hInstance;
 	m_hMainWindow = _hWnd;
 
@@ -97,18 +111,6 @@ CGame& CGame::GetInstance()
 	return (*s_pGame);
 }
 
-void CGame::GameOverWon()
-{
-	MessageBox(m_hMainWindow, "Winner!", "Game Over", MB_OK);
-	PostQuitMessage(0);
-}
-
-void CGame::GameOverLost()
-{
-	MessageBox(m_hMainWindow, "Loser!", "Game Over", MB_OK);
-	PostQuitMessage(0);
-}
-
 void CGame::DestroyInstance()
 {
 	delete s_pGame;
@@ -153,4 +155,101 @@ bool CGame::GetMouseDown()
 void CGame::HandleMouseDrag()
 {
 	m_pLevel->HandleMouseDrag();
+}
+
+bool CGame::IsDeckStored()
+{
+	return m_bDeckStored;
+}
+
+void CGame::StoreGameDeck()
+{
+	m_bDeckStored = true;
+	m_pLevel->GetDeck(m_pStoredResetDeck);
+}
+
+void CGame::GetStoredDeck(vector<CCard*> &_pTarget)
+{
+
+	_pTarget.resize(52);
+	copy(m_pStoredResetDeck.begin(),m_pStoredResetDeck.end(),_pTarget.begin());
+
+}
+
+
+void CGame::RestartGame()
+{
+	delete m_pLevel;
+	m_pLevel = 0;
+	delete m_pBackBuffer;
+	m_pBackBuffer = 0;
+	delete m_pClock;
+	m_pClock = 0;
+
+	Initialise(m_hApplicationInstance, m_hMainWindow, m_iWidth, m_iHeight);
+}
+
+void CGame::NewGame()
+{
+	delete m_pLevel;
+	m_pLevel = 0;
+	delete m_pBackBuffer;
+	m_pBackBuffer = 0;
+	delete m_pClock;
+	m_pClock = 0;
+	while(!m_pStoredResetDeck.empty())
+	{
+		CCard* _pTemp = m_pStoredResetDeck.back();
+		m_pStoredResetDeck.pop_back();
+		delete _pTemp;
+	}
+	m_bDeckStored = 0;
+	Initialise(m_hApplicationInstance, m_hMainWindow, m_iWidth, m_iHeight);
+}
+
+/***********************
+
+ * DlgProc: handle the dialog box functions
+ * @parameter: HWND hWndDlg, dialog handler
+				UINT _msg, message
+				WPARAM _wparam,	
+				LPARAM _lparam
+ * @return:
+
+ ********************/
+LRESULT CALLBACK CGame::DlgProc(HWND hWndDlg, UINT _msg, WPARAM _wparam, LPARAM _lparam)
+{
+	switch(_msg)
+	{
+	case WM_INITDIALOG:
+		return true;
+
+	case WM_COMMAND:
+		switch(_wparam)
+		{
+			case IDC_EXIT:
+			{
+				PostQuitMessage(0);
+				return false;
+			}
+				break;
+			case IDC_NEWGAME:
+			{
+				CGame::GetInstance().NewGame();
+				EndDialog(hWndDlg, 0);
+				return true;
+			}
+				break;
+			case IDC_RESTARTGAME:
+			{
+				CGame::GetInstance().RestartGame();
+				EndDialog(hWndDlg, 0);
+				return true;
+			}
+				break;
+		}
+		break;
+	}
+
+	return false;
 }

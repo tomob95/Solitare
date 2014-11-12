@@ -24,6 +24,7 @@ CHome::CHome()
 
 CHome::~CHome()
 {
+
 }
 
 bool CHome::Initialise(int _iDrawX, int _iDrawY)
