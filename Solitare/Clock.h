@@ -30,6 +30,11 @@ public:
 	void Process();
 	float GetDeltaTick();
 
+	float m_fTimeElapsed;
+	float m_fDeltaTime;
+	float m_fLastTime;
+	float m_fCurrentTime;
+
 protected:
 private:
 	CClock(const CClock& _kr);
@@ -38,11 +43,6 @@ private:
 // Member Variables
 public:
 protected:
-	float m_fTimeElapsed;
-	float m_fDeltaTime;
-	float m_fLastTime;
-	float m_fCurrentTime;
-
 private:
 };
 #endif // __CLOCK_H__

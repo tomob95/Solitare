@@ -26,6 +26,7 @@
 #include "DrawPile.h"
 #include "Column.h"
 #include "Home.h"
+#include "Clock.h"
 
 // This Include
 #include "Level.h"
@@ -118,7 +119,7 @@ bool CLevel::Initialise(int _iWidth, int _iHeight)
 
 	//Shuffle the cards in the deck
 	// Comment out to test win
-	//std::random_shuffle(m_pDeck->m_pDeck.begin(), m_pDeck->m_pDeck.end());
+	std::random_shuffle(m_pDeck->m_pDeck.begin(), m_pDeck->m_pDeck.end());
 
 	// Loop through each column
 	for(int i = 0; i < 7; i++)
@@ -494,6 +495,8 @@ void CLevel::HandleMouseDrop()
 						_pTemp->SetDragged(false);
 						m_pColumns[i]->m_pPile.push_back(_pTemp);
 						_pTemp = nullptr;
+						//Update the score for putting a card onto a column
+						UpdateScoreText(CARD_TO_COLUMNS);
 					}
 					// If its one of the game columns
 					if(m_iDraggedCardsLastColumn < 8)
@@ -502,7 +505,9 @@ void CLevel::HandleMouseDrop()
 						if(!m_pColumns[m_iDraggedCardsLastColumn]->IsEmpty())
 						{
 							// Set top card to face up
-							m_pColumns[m_iDraggedCardsLastColumn]->GetTopCard()->SetFaceUp(true);	
+							m_pColumns[m_iDraggedCardsLastColumn]->GetTopCard()->SetFaceUp(true);
+							//Update the score for putting a card on the ace pile
+							UpdateScoreText(FLIP_CARD);
 						}
 					}
 				}
@@ -519,6 +524,8 @@ void CLevel::HandleMouseDrop()
 					_pTemp->SetDragged(false);
 					m_pColumns[i]->m_pPile.push_back(_pTemp);
 					_pTemp = nullptr;
+					//Update the score for putting a card onto a column
+					UpdateScoreText(CARD_TO_COLUMNS);
 				}
 				//make the old column's top card face up
 				if(m_iDraggedCardsLastColumn < 8)
@@ -527,7 +534,9 @@ void CLevel::HandleMouseDrop()
 					if(!m_pColumns[m_iDraggedCardsLastColumn]->IsEmpty())
 					{
 						// Get top card set to face up
-						m_pColumns[m_iDraggedCardsLastColumn]->GetTopCard()->SetFaceUp(true);	
+						m_pColumns[m_iDraggedCardsLastColumn]->GetTopCard()->SetFaceUp(true);
+						//Update the score for putting a card on the ace pile
+						UpdateScoreText(FLIP_CARD);
 					}
 				}
 			}
@@ -558,6 +567,8 @@ void CLevel::HandleMouseDrop()
 					_pTemp->SetDragged(false);
 					m_pAceHomes[i]->m_pHome.push_back(_pTemp);
 					_pTemp = nullptr;
+					//Update the score for putting a card on the ace pile
+					UpdateScoreText(CARD_TO_ACE_HOME);
 
 					// If column is less than 8
 					if(m_iDraggedCardsLastColumn < 8)
@@ -566,7 +577,9 @@ void CLevel::HandleMouseDrop()
 						if(!m_pColumns[m_iDraggedCardsLastColumn]->IsEmpty())
 						{
 							// Set faceup
-							m_pColumns[m_iDraggedCardsLastColumn]->GetTopCard()->SetFaceUp(true);	
+							m_pColumns[m_iDraggedCardsLastColumn]->GetTopCard()->SetFaceUp(true);
+							// Update the score for flipping a card
+							UpdateScoreText(FLIP_CARD);
 						}
 					}
 					return;
@@ -584,6 +597,8 @@ void CLevel::HandleMouseDrop()
 						_pTemp->SetDragged(false);
 						m_pAceHomes[i]->m_pHome.push_back(_pTemp);
 						_pTemp = nullptr;
+						//Update the score for putting a card on the ace pile
+						UpdateScoreText(CARD_TO_ACE_HOME);
 
 						// If column is less than 8
 						if(m_iDraggedCardsLastColumn < 8)
@@ -592,7 +607,9 @@ void CLevel::HandleMouseDrop()
 							if(!m_pColumns[m_iDraggedCardsLastColumn]->IsEmpty())
 							{
 								// Get top card set to face up
-								m_pColumns[m_iDraggedCardsLastColumn]->GetTopCard()->SetFaceUp(true);	
+								m_pColumns[m_iDraggedCardsLastColumn]->GetTopCard()->SetFaceUp(true);
+								// Update the score for flipping a card
+								UpdateScoreText(FLIP_CARD);
 							}
 						}
 						return;
@@ -687,11 +704,9 @@ void CLevel::DrawScore()
 	int kiX = 60;
 	int kiY = m_iHeight - 660;
 
-	// Update score
-	UpdateScoreText(10);	
 	// Create string out of score value
 	std::string _strScore;
-	_strScore = ToString(m_iScore);
+	_strScore = "Score: " + ToString(m_iScore);
 
 	// Create rectangle using x & y
 	RECT _rTextPos;
@@ -699,7 +714,11 @@ void CLevel::DrawScore()
 	_rTextPos.left = kiX;
 
 	// Output text
-	DrawText(hdc, _strScore.c_str(), _strScore.size(),&_rTextPos, DT_SINGLELINE);
+		//--- this works with visual studio 2012 ---//
+		//DrawText(hdc, _strScore.c_str(), _strScore.size(), &_rTextPos, DT_SINGLELINE);
+	TextOut(hdc,kiX,235, _strScore.c_str(), _strScore.size());
+
+	
 }
 
 /***********************
