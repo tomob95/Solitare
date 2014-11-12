@@ -6,8 +6,8 @@
 //
 // 2014 (c) Media Design School
 //
-// File Name	: Deck.h
-// Description	: Main implementation of the program
+// File Name	: DrawPile.h
+// Description	: Header file for Drawpile class
 // Author		: Kelsey Scheurich
 // Mail			: kelsey.scheurich@mediadesign.school.nz
 //
@@ -16,7 +16,7 @@
 
 // Library includes
 #include <stack>
-#include <vector>
+//#include <vector>
 
 // Local includes
 #include "entity.h"
@@ -24,23 +24,25 @@
 
 using namespace std;
 
-class CDeck :
+class CDrawPile :
 	public CEntity
 {
 public:
-	// Coonstructor/Destructor
-	CDeck(void);
-	virtual ~CDeck(void);
+	// Member funtions
+	CDrawPile(void);
+	// Virtual functions
+	virtual ~CDrawPile(void);
 	virtual bool Initialise(int _iDrawX, int _iDrawY);
 	virtual void Draw();
 	virtual void Process(float _fDeltaTick);
 
-	// Prototypes
-	bool DeckEmpty();
+	//Prototypes
+	bool DrawEmpty();
 	CCard* GetTopCard();
 
-	// Member variables
-	vector<CCard*> m_pDeck;
+	// Member varible
+	stack<CCard*> m_pDraw;
+
 
 };
 

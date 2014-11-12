@@ -23,6 +23,7 @@
 #include "utils.h"
 #include "backbuffer.h"
 #include "Deck.h"
+#include "DrawPile.h"
 #include "Column.h"
 
 #include "Home.h"
@@ -76,11 +77,15 @@ bool CLevel::Initialise(int _iWidth, int _iHeight)
 
 	// Create new deck, set as member
 	m_pDeck = new CDeck();
+	m_pDraw = new CDrawPile();
 	// Validate and intialise deck
 	VALIDATE(m_pDeck->Initialise(0, 4));
+	VALIDATE(m_pDraw->Initialise(6, 4));
 	// Set deck x & y position
 	m_pDeck->SetX(40);
 	m_pDeck->SetY(40);
+	m_pDraw->SetX(204);
+	m_pDraw->SetY(40);
 
 	// Create temp pointers for card, column and the home piles
 	CCard* _TempCard;
@@ -163,11 +168,10 @@ bool CLevel::Initialise(int _iWidth, int _iHeight)
  ********************/
 void CLevel::Draw()
 {
-
-
-	// Call draw recursively
-
+	// Call draw
 	m_pDeck->Draw();
+	m_pDraw->Draw();
+
 	// Draw the columns
 	for(int i=0; i<7; i++)
 	{
@@ -204,10 +208,34 @@ void CLevel::Draw()
  ********************/
 void CLevel::Process(float _fDeltaTick)
 {
+
+	// If the mouse is down
+	if(m_bMouseDown)
+	{
+		// If mouse is over deck
+		if( ( m_fMouseX >= m_pDeck->GetX() ) && ( m_fMouseX < m_pDeck->GetX()+CARD_WIDTH )
+			&& ( m_fMouseY >= m_pDeck->GetY() ) && ( m_fMouseY < m_pDeck->GetY()+CARD_HEIGHT ) )
+		{
+			// Call deck click function
+			DeckClick();
+		}
+		else
+		{
+			// Start drag
+			HandleMouseDrag();
+		}
+	}
+	// Else if cards are being dragged
+	else if (!m_pDraggedCards.empty())
+	{
+		HandleMouseDrop();
+	}
+
 	ProcessCheckForWin();
 
 	//Process the deck
 	m_pDeck->Process(_fDeltaTick);
+	m_pDraw->Process( _fDeltaTick );
 
 	//Process the columns
 
@@ -574,6 +602,7 @@ void CLevel::SetMouseDown(bool _bMouseDown)
 
 /***********************
 
+<<<<<<< HEAD
  * GetMouseDown: Return if the mouse is down
  * @author: 
  * @return: bool
@@ -583,3 +612,36 @@ bool CLevel::GetMouseDown()
 {
 	return m_bMouseDown;
 }
+=======
+ * DeckClick: Draws another card on deck click
+ * @author: 
+
+ ********************/
+void CLevel::DeckClick()
+{
+	// If the deck is not empty
+	if( !m_pDeck->DeckEmpty() )
+	{
+		// Get top card and put into draw pile
+		CCard* temp = m_pDeck->GetTopCard();
+		temp->SetFaceUp( true );
+		m_pDraw->m_pDraw.push( temp );
+
+	}
+	else // The deck is empty
+	{
+		// Get draw pile
+		while( !m_pDraw->DrawEmpty() )
+		{
+			// Create temp, set as top of draw
+			CCard* temp = m_pDraw->GetTopCard();
+			// Set face up to false
+			temp->SetFaceUp( false );
+			// Push to deck
+			m_pDeck->m_pDeck.push_back( temp );
+			// Pop off draw
+			m_pDraw->m_pDraw.pop();
+		}
+	}
+}
+>>>>>>> 66951ebdc039e05311dca07c55c38853a667dc98

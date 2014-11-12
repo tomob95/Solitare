@@ -6,17 +6,15 @@
 //
 // 2014 (c) Media Design School
 //
-// File Name	: BackBuffer.cpp
-// Description	: Implementation for the BackBuffer class
+// File Name	: DrawPile.cpp
+// Description	: Implementation for the Drawpile class
 // Author		: Tom O'Brien, Kelsey Scheurich, Tom Butler
 // Mail			: kelsey.scheurich@mediadesign.school.nz
 //
 
-// Local includes
+// This include
+#include "DrawPile.h"
 #include "utils.h"
-
-// This includes
-#include "Deck.h"
 
 /***********************
 
@@ -24,7 +22,7 @@
  * @author: 
 
  ********************/
-CDeck::CDeck(void)
+CDrawPile::CDrawPile(void)
 {
 }
 
@@ -34,7 +32,7 @@ CDeck::CDeck(void)
  * @author: 
 
  ********************/
-CDeck::~CDeck(void)
+CDrawPile::~CDrawPile(void)
 {
 }
 
@@ -46,10 +44,11 @@ CDeck::~CDeck(void)
  *				int _iDrawY, draw position
 
  ********************/
-bool CDeck::Initialise(int _iDrawX, int _iDrawY)
+bool CDrawPile::Initialise( int _iDrawX, int _iDrawY )
 {
 	// Validate and initialise entitiy
-	VALIDATE(CEntity::Initialise(_iDrawX, _iDrawY));
+	VALIDATE( CEntity::Initialise( _iDrawX, _iDrawY ) );
+
 	return (true);
 }
 
@@ -59,7 +58,7 @@ bool CDeck::Initialise(int _iDrawX, int _iDrawY)
  * @author: 
 
  ********************/
-void CDeck::Draw()
+void CDrawPile::Draw()
 {
 	// Call draw for entity
 	CEntity::Draw();
@@ -72,23 +71,24 @@ void CDeck::Draw()
  * @parameters: float _fDeltaTick, delta time
 
  ********************/
-void CDeck::Process(float _fDeltaTick)
+void CDrawPile::Process( float _fDeltaTick )
 {
 	// Process the entity
-	CEntity::Process(_fDeltaTick);
+	CEntity::Process( _fDeltaTick );
 
-	// If the deck is empty
-	if (DeckEmpty())
+	// If the draw pile is empty
+	if( DrawEmpty() )
 	{
 		//draw empty deck sprite
-		SetDrawX(CARD_WIDTH * 6);
-		SetDrawY(CARD_HEIGHT * 4);
+		SetDrawX( CARD_WIDTH * 6 );
+		SetDrawY( CARD_HEIGHT * 4 );
 	}
 	else
 	{
-		//draw card back sprite
-		SetDrawX(BACK_X);
-		SetDrawY(BACK_Y);
+		//draw card front sprite
+		//CEntity::Draw();
+		SetDrawX( m_pDraw.top()->GetFace() * CARD_WIDTH );
+		SetDrawY( m_pDraw.top()->GetFace() * CARD_HEIGHT );
 	}
 }
 
@@ -99,10 +99,10 @@ void CDeck::Process(float _fDeltaTick)
  * @return: bool
 
  ********************/
-bool CDeck::DeckEmpty()
+bool CDrawPile::DrawEmpty()
 {
 	// Return if deck is empty
-	return (m_pDeck.empty());
+	return( m_pDraw.empty() );
 }
 
 /***********************
@@ -112,7 +112,7 @@ bool CDeck::DeckEmpty()
  * @return: CCard*
 
  ********************/
-CCard* CDeck::GetTopCard()
+CCard* CDrawPile::GetTopCard()
 {
-	return (m_pDeck.back());
+	return( m_pDraw.top() );
 }
