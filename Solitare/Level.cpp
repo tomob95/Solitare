@@ -25,14 +25,12 @@
 #include "Deck.h"
 #include "DrawPile.h"
 #include "Column.h"
-
 #include "Home.h"
 
 // This Include
 #include "Level.h"
 
 // Implementation
-
 
 #define CHEAT_BOUNCE_ON_BACK_WALL
 
@@ -42,7 +40,6 @@
  * @author: Kelsey Scheurich
 
  ********************/
-
 CLevel::CLevel()
 	: m_pDeck(0),	// Default all to 0
 	  m_iWidth(0),
@@ -67,6 +64,7 @@ CLevel::~CLevel()
  * @author: 
  * @parameter: int _iWidth, width of level
  *				int _iHeight, height of level
+ * @return: bool
 
  ********************/
 bool CLevel::Initialise(int _iWidth, int _iHeight)
@@ -75,6 +73,7 @@ bool CLevel::Initialise(int _iWidth, int _iHeight)
 	m_iWidth = _iWidth;
 	m_iHeight = _iHeight;
 
+	// Initialise score to 0
 	m_iScore = 0;
 	
 	// Create new deck, set as member
@@ -93,8 +92,6 @@ bool CLevel::Initialise(int _iWidth, int _iHeight)
 	CCard* _TempCard;
 	CColumn* _TempColumn;
 	CHome* _TempHome;
-
-	//Initialise the cards here
 	
 	//Create a card of each face and suit
 	for (int i = 0; i < 4; i++)
@@ -118,9 +115,12 @@ bool CLevel::Initialise(int _iWidth, int _iHeight)
 		_TempColumn->SetX(40 + (i * 165));
 		_TempColumn->SetY(300);
 	}
+
 	//Shuffle the cards in the deck
+	// Comment out to test win
 	//std::random_shuffle(m_pDeck->m_pDeck.begin(), m_pDeck->m_pDeck.end());
 
+	// Loop through each column
 	for(int i = 0; i < 7; i++)
 	{
 		//deal cards into the columns
@@ -150,9 +150,12 @@ bool CLevel::Initialise(int _iWidth, int _iHeight)
 	//Create each Ace Pile
 	for(int i = 0; i < 4; i++)
 	{
+		// Create new home object & initialise
 		_TempHome = new CHome();
 		_TempHome->Initialise(6, 4);
+		// Push to ace homes
 		m_pAceHomes.push_back(_TempHome);
+		// Set x & y, draw
 		_TempHome->SetX(535 + (i * 165));
 		_TempHome->SetY(40);
 		_TempHome->SetDrawX((2 + i) * CARD_WIDTH);
@@ -188,9 +191,7 @@ void CLevel::Draw()
 		m_pAceHomes[i]->Draw();
 	}
 
-
 	// If the dragged cards pile is not empty
-
 	if(!m_pDraggedCards.empty())
 	{
 		// For each card in the pile
@@ -211,6 +212,7 @@ void CLevel::Draw()
  ********************/
 void CLevel::Process(float _fDeltaTick)
 {
+	// Check if game is won
 	ProcessCheckForWin();
 
 	//Process the deck
@@ -227,14 +229,17 @@ void CLevel::Process(float _fDeltaTick)
 	//For each home cell
 	for (int j = 0; j < 4; j++)
 	{
+		// If home is empty
 		if(m_pAceHomes[j]->IsEmpty())
 		{
+			// Draw empty sprites & process
 			m_pAceHomes[j]->SetDrawX((2 + j) * CARD_WIDTH);
 			m_pAceHomes[j]->SetDrawY(4 * CARD_HEIGHT);
 			m_pAceHomes[j]->Process(_fDeltaTick);
 		}
 		else
 		{
+			// Draw the cards
 			for(unsigned int i = 0; i<m_pAceHomes[j]->m_pHome.size(); i++)
 			{
 				m_pAceHomes[j]->m_pHome[i]->SetX(m_pAceHomes[j]->GetX());
@@ -268,23 +273,28 @@ void CLevel::ProcessCheckForWin()
 	// Loop through all homes
 	for( int i = 0; i < 4; ++i )
 	{
+		// If each home is full
 		if( m_pAceHomes[ i ]->m_pHome.size() == 13 )
 		{
+			// Add to check
 			iCheck++;
 		}
 	}
 
+	// If all homes are full
 	if( iCheck == 4 )
 	{
+		// Get instance
 		HDC hdc = CGame::GetInstance().GetBackBuffer()->GetBFDC();
 
 		// Create x & y pos
 		int kiX = 60;
 		int kiY = m_iHeight - 600;
 
-		UpdateScoreText(10);	
+		// Create string
 		string _strGO = "You won, game over!";
 
+		// Create string, set x & y
 		RECT _rTextPos;
 		_rTextPos.top = kiY;
 		_rTextPos.left = kiX;
@@ -294,14 +304,13 @@ void CLevel::ProcessCheckForWin()
 		DrawScore();
 
 	}
-
-	//TODO: this (m_strScore)
 }
 
 /***********************
 
  * IsMouseDraggingCards: Check if the mouse is dragging cards
  * @author: 
+ * @return: bool
 
  ********************/
 bool CLevel::IsMouseDraggingCards()
@@ -313,11 +322,12 @@ bool CLevel::IsMouseDraggingCards()
 
  * IsMouseDraggingCards: Check if the mouse is dragging cards
  * @author: 
+ * @parameter: int _ColumnNo, 
 
  ********************/
 void CLevel::DragFromColumn(int _ColumnNo)
 {
-
+	// TODO: Do we need this?
 }
 
 /***********************
@@ -336,11 +346,15 @@ void CLevel::HandleMouseDrag()
 		int _iDrawPileX = m_pDraw->GetX();
 		int _iDrawPileY = m_pDraw->GetY();
 
+		// If the mouse is on a pile
 		if((m_fMouseX >= _iDrawPileX) && (m_fMouseX < _iDrawPileX + CARD_WIDTH)
 			&& (m_fMouseY >= _iDrawPileY) && (m_fMouseY < _iDrawPileY + CARD_HEIGHT))
 		{
+			// Set card to dragged
 			m_pDraw->GetTopCard()->SetDragged(true);
+			// Push draw card onto drag pile
 			m_pDraggedCards.push_back(m_pDraw->GetTopCard());
+			// Pop off draw
 			m_pDraw->m_pDraw.pop();
 			m_iDraggedCardsLastColumn = 8;
 		}
@@ -348,15 +362,20 @@ void CLevel::HandleMouseDrag()
 		//Detect dragging the from the home piles
 		for(int i=0; i<4; i++)
 		{
+			// If homes are not empty
 			if(!m_pAceHomes[i]->IsEmpty())
 			{
+				// Get x & y
 				int _iPileX = m_pAceHomes[i]->GetX();
 				int _iPileY = m_pAceHomes[i]->GetY();
 
+				// If mouse is over pile
 				if((m_fMouseX >= _iPileX) && (m_fMouseX < _iPileX+CARD_WIDTH)
 					&& (m_fMouseY >= _iPileY) && (m_fMouseY < _iPileY+CARD_HEIGHT))
 				{
+					// Get top card and set dragged to true
 					m_pAceHomes[i]->GetTopCard()->SetDragged(true);
+					// Put dragged card at the beginning of drag pile
 					m_pDraggedCards.insert(m_pDraggedCards.begin(), m_pAceHomes[i]->GetTopCard());
 										
 					//Remove the cards that are being dragged
@@ -371,6 +390,7 @@ void CLevel::HandleMouseDrag()
 		// Iterate through all columns
 		for(int i=0; i<7; i++)
 		{
+			// If columns are not empty
 			if(!m_pColumns[i]->IsEmpty())
 			{
 				//See if they have selected a stack of cards
@@ -413,7 +433,6 @@ void CLevel::HandleMouseDrag()
 					&& (m_fMouseY >= _FrontCardY) && (m_fMouseY < _FrontCardY+CARD_HEIGHT))
 				{
 					// Drag the card, add to dragged pile vector
-
 					m_pColumns[i]->GetTopCard()->SetDragged(true);
 					m_pDraggedCards.push_back(m_pColumns[i]->m_pPile.back());
 					m_pColumns[i]->m_pPile.pop_back();
@@ -428,8 +447,15 @@ void CLevel::HandleMouseDrag()
 	}
 }
 
+/***********************
+
+ * HandleMouseDrop: Function to handle drop mouse
+ * @author: 
+
+ ********************/
 void CLevel::HandleMouseDrop()
 {
+	// Create int for x & y pos
 	int _iColumnX;
 	int _iColumnY;
 
@@ -439,6 +465,7 @@ void CLevel::HandleMouseDrop()
 		//Get screen coords of front card of column
 		if(!m_pColumns[i]->m_pPile.empty())
 		{
+			// Set pos as top card's x & y
 			_iColumnX = m_pColumns[i]->GetTopCard()->GetX();
 			_iColumnY = m_pColumns[i]->GetTopCard()->GetY();
 		}
@@ -468,15 +495,19 @@ void CLevel::HandleMouseDrop()
 						m_pColumns[i]->m_pPile.push_back(_pTemp);
 						_pTemp = nullptr;
 					}
+					// If its one of the game columns
 					if(m_iDraggedCardsLastColumn < 8)
 					{
+						// If the last column is not empty
 						if(!m_pColumns[m_iDraggedCardsLastColumn]->IsEmpty())
 						{
+							// Set top card to face up
 							m_pColumns[m_iDraggedCardsLastColumn]->GetTopCard()->SetFaceUp(true);	
 						}
 					}
 				}
 			}
+
 			//If not, make sure you are trying to move a king into the empty space
 			else if(m_pDraggedCards.back()->GetFace() == 12)
 			{
@@ -492,8 +523,10 @@ void CLevel::HandleMouseDrop()
 				//make the old column's top card face up
 				if(m_iDraggedCardsLastColumn < 8)
 				{
+					// If last column is not empty
 					if(!m_pColumns[m_iDraggedCardsLastColumn]->IsEmpty())
 					{
+						// Get top card set to face up
 						m_pColumns[m_iDraggedCardsLastColumn]->GetTopCard()->SetFaceUp(true);	
 					}
 				}
@@ -506,8 +539,10 @@ void CLevel::HandleMouseDrop()
 	//Release one card onto the ace pile
 	if(m_pDraggedCards.size() == 1)
 	{
+		// For each home
 		for(unsigned int i = 0; i < 4; i++)
 		{
+			// Set xy pos as home xy pos
 			_iColumnX = m_pAceHomes[i]->GetX();
 			_iColumnY = m_pAceHomes[i]->GetY();
 
@@ -523,10 +558,14 @@ void CLevel::HandleMouseDrop()
 					_pTemp->SetDragged(false);
 					m_pAceHomes[i]->m_pHome.push_back(_pTemp);
 					_pTemp = nullptr;
+
+					// If column is less than 8
 					if(m_iDraggedCardsLastColumn < 8)
 					{
+						// If last column is not empty
 						if(!m_pColumns[m_iDraggedCardsLastColumn]->IsEmpty())
 						{
+							// Set faceup
 							m_pColumns[m_iDraggedCardsLastColumn]->GetTopCard()->SetFaceUp(true);	
 						}
 					}
@@ -545,10 +584,14 @@ void CLevel::HandleMouseDrop()
 						_pTemp->SetDragged(false);
 						m_pAceHomes[i]->m_pHome.push_back(_pTemp);
 						_pTemp = nullptr;
+
+						// If column is less than 8
 						if(m_iDraggedCardsLastColumn < 8)
 						{
+							// If last column is not empty
 							if(!m_pColumns[m_iDraggedCardsLastColumn]->IsEmpty())
 							{
+								// Get top card set to face up
 								m_pColumns[m_iDraggedCardsLastColumn]->GetTopCard()->SetFaceUp(true);	
 							}
 						}
@@ -563,9 +606,12 @@ void CLevel::HandleMouseDrop()
 	//Return cards to their previous pile
 	while(!m_pDraggedCards.empty())
 	{
+		// Create temp to hold dragged cards
 		CCard* _pTemp = m_pDraggedCards.back();
 		m_pDraggedCards.pop_back();
 		_pTemp->SetDragged(false);
+
+		// Switch depending on last position, push back to appropriate column
 		switch(m_iDraggedCardsLastColumn)
 		{
 		case 8:
@@ -593,6 +639,15 @@ void CLevel::HandleMouseDrop()
 	
 }
 
+/***********************
+
+ * CheckCardToColumn: Function to check if card can go to column
+ * @author: 
+ * @parameter: CCard* _pSource, source card
+ *				CCard* _pDestination, destination card
+ * @return: bool
+
+ ********************/
 bool CLevel::CheckCardToColumn(CCard* _pSource, CCard* _pDestination)
 {
 	//Get the card values of the source card
@@ -632,10 +687,13 @@ void CLevel::DrawScore()
 	int kiX = 60;
 	int kiY = m_iHeight - 660;
 
+	// Update score
 	UpdateScoreText(10);	
+	// Create string out of score value
 	std::string _strScore;
 	_strScore = ToString(m_iScore);
 
+	// Create rectangle using x & y
 	RECT _rTextPos;
 	_rTextPos.top = kiY;
 	_rTextPos.left = kiX;
@@ -648,6 +706,8 @@ void CLevel::DrawScore()
 
  * SetMouseCoords: Set the x & y pos of the mouse
  * @author: 
+ * @parameter: int _x, x position
+ *				int _y, y position
 
  ********************/
 void CLevel::SetMouseCoords(int _x, int _y)
@@ -661,6 +721,7 @@ void CLevel::SetMouseCoords(int _x, int _y)
 
  * UpdateScoreText: Update the score text
  * @author: Tom Butler
+ * @parameter: int _iScore, score to update
 
  ********************/
 void CLevel::UpdateScoreText(int _iScore)
@@ -682,7 +743,6 @@ void CLevel::SetMouseDown(bool _bMouseDown)
 
 /***********************
 
-<<<<<<< HEAD
  * GetMouseDown: Return if the mouse is down
  * @author: 
  * @return: bool

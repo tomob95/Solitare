@@ -6,8 +6,8 @@
 //
 // 2014 (c) Media Design School
 //
-// File Name	: BackBuffer.cpp
-// Description	: Implementation for the BackBuffer class
+// File Name	: Sprite.cpp
+// Description	: Implementation for the sprite class
 // Author		: Tom O'Brien, Kelsey Scheurich, Tom Butler
 // Mail			: kelsey.scheurich@mediadesign.school.nz
 //
@@ -26,9 +26,6 @@
 // Static Variables
 HDC CSprite::s_hSharedSpriteDC = 0;
 int CSprite::s_iRefCount = 0;
-//HBITMAP CSprite::m_hSprite = 0;
-//BITMAP CSprite::m_bitmapSprite;
-// Static Function Prototypes
 
 // Implementation
 CSprite::CSprite(): m_iX(0), m_iY(0)
