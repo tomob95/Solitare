@@ -28,7 +28,7 @@
 #include "utils.h"
 #include "resource.h"
 
-#define WINDOW_CLASS_NAME L"WINCLASS1"
+#define WINDOW_CLASS_NAME "WINCLASS1"
 
 //Struct and Enum Declarations
 
@@ -154,7 +154,7 @@ int WINAPI WinMain(HINSTANCE _hInstance, HINSTANCE _hPrevInstance,	LPSTR _lpCmdL
 	// create the window
 	hwnd =	CreateWindowEx(NULL,				// Extended style.
 			WINDOW_CLASS_NAME,					// Class.
-			L"Solitare",						// Title.
+			"Solitare",						// Title.
 			WS_OVERLAPPEDWINDOW | WS_VISIBLE,
 			0, 0,								// Initial x,y.
 			WINDOW_WIDTH, WINDOW_HEIGHT,		// Initial width, height.

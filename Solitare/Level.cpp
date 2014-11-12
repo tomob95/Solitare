@@ -75,6 +75,8 @@ bool CLevel::Initialise(int _iWidth, int _iHeight)
 	m_iWidth = _iWidth;
 	m_iHeight = _iHeight;
 
+	m_iScore = 0;
+	
 	// Create new deck, set as member
 	m_pDeck = new CDeck();
 	m_pDraw = new CDrawPile();
@@ -171,6 +173,7 @@ void CLevel::Draw()
 	// Call draw
 	m_pDeck->Draw();
 	m_pDraw->Draw();
+	DrawScore();
 
 	// Draw the columns
 	for(int i=0; i<7; i++)
@@ -291,7 +294,7 @@ void CLevel::Process(float _fDeltaTick)
  ********************/
 void CLevel::ProcessCheckForWin()
 {
-	//TODO: this
+	//TODO: this (m_strScore)
 }
 
 /***********************
@@ -517,7 +520,7 @@ bool CLevel::CheckCardToColumn(CCard* _pSource, CCard* _pDestination)
 /***********************
 
  * DrawScore: Draw the score to the screen
- * @author: 
+ * @author: Tom Butler
 
  ********************/
 void CLevel::DrawScore()
@@ -526,11 +529,19 @@ void CLevel::DrawScore()
 	HDC hdc = CGame::GetInstance().GetBackBuffer()->GetBFDC();
 
 	// Create x & y pos
-	const int kiX = 0;
-	const int kiY = m_iHeight - 50;
-	
+	int kiX = 60;
+	int kiY = m_iHeight - 660;
+
+	UpdateScoreText(10);	
+	std::string _strScore;
+	_strScore = ToString(m_iScore);
+
+	RECT _rTextPos;
+	_rTextPos.top = kiY;
+	_rTextPos.left = kiX;
+
 	// Output text
-	TextOut(hdc, kiX, kiY, m_strScore.c_str(), static_cast<int>(m_strScore.size()));
+	DrawText(hdc, _strScore.c_str(), _strScore.size(),&_rTextPos, DT_SINGLELINE);
 }
 
 /***********************
@@ -549,12 +560,12 @@ void CLevel::SetMouseCoords(int _x, int _y)
 /***********************
 
  * UpdateScoreText: Update the score text
- * @author: 
+ * @author: Tom Butler
 
  ********************/
-void CLevel::UpdateScoreText()
+void CLevel::UpdateScoreText(int _iScore)
 {
-	// TODO: this
+	m_iScore = m_iScore + _iScore;
 }
 
 /***********************

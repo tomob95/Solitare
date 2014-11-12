@@ -33,7 +33,7 @@ public:
 	void DeckClick();
 protected:
 	void ProcessCheckForWin();
-	void UpdateScoreText();
+	void UpdateScoreText(int _iScore);
 	void DrawScore();
 private:
 	CLevel(const CLevel& _kr);
@@ -50,7 +50,7 @@ protected:
 	int m_iDraggedCardsLastColumn;
 	int m_iWidth;
 	int m_iHeight;
-	std::wstring m_strScore;
+	int m_iScore;
 	bool m_bMouseDown;
 
 	int m_fMouseX;
