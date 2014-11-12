@@ -226,7 +226,7 @@ int WINAPI WinMain(HINSTANCE _hInstance, HINSTANCE _hPrevInstance,	LPSTR _lpCmdL
 	hwnd =	CreateWindowEx(NULL,				// Extended style.
 			WINDOW_CLASS_NAME,					// Class.
 			"Solitare",						// Title.
-			WS_OVERLAPPEDWINDOW | WS_VISIBLE,
+			(WS_OVERLAPPEDWINDOW ^ WS_THICKFRAME) | WS_VISIBLE,
 			0, 0,								// Initial x,y.
 			WINDOW_WIDTH, WINDOW_HEIGHT,		// Initial width, height.
 			NULL,								// Handle to parent.

@@ -70,6 +70,5 @@ $RECYCLE.BIN/
 *.msm
 *.msp
 *.ipch
-*.ipch
 *.tlog
-*.tlog
+

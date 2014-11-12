@@ -324,8 +324,9 @@ bool CLevel::ProcessCheckForWin()
 
 		// Create string
 		string _strGO = "You won, game over!";
-
+		
 		DialogBox(CGame::GetInstance().GetAppInstance(), MAKEINTRESOURCE(IDD_DIALOG1), CGame::GetInstance().GetWindow(),  (DLGPROC)CGame::DlgProc);
+		
 		return true;
 	}
 	return false;
@@ -728,7 +729,7 @@ void CLevel::DrawScore()
 	// Output text
 		//--- this works with visual studio 2012 ---//
 		//DrawText(hdc, _strScore.c_str(), _strScore.size(), &_rTextPos, DT_SINGLELINE);
-	TextOut(hdc,kiX,235, _strScore.c_str(), _strScore.size());
+	TextOut(hdc,kiX,250, _strScore.c_str(), _strScore.size());
 
 	
 }
@@ -855,3 +856,14 @@ void CLevel::GetDeck(vector<CCard*> &_Target)
 	copy(m_pDeck->m_pDeck.begin(),m_pDeck->m_pDeck.end(),_Target.begin());
 }
 
+/***********************
+
+ * GetScore: Return the score of the player
+ * @author: 
+ * @return: int
+
+ ********************/
+int CLevel::GetScore()
+{
+	return m_iScore;
+}

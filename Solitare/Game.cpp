@@ -22,6 +22,7 @@
 #include "Level.h"
 #include "BackBuffer.h"
 #include "utils.h"
+#include "resource.h"
 
 // This Include
 #include "Game.h"
@@ -41,7 +42,6 @@ CGame* CGame::s_pGame = 0;
 
  ********************/
 CGame::CGame()
-<<<<<<< HEAD
 : m_pLevel(0) // Default to 0
 , m_pClock(0)
 , m_hApplicationInstance(0)
@@ -360,34 +360,49 @@ LRESULT CALLBACK CGame::DlgProc(HWND hWndDlg, UINT _msg, WPARAM _wparam, LPARAM 
 	switch(_msg)
 	{
 	case WM_INITDIALOG:
-		return true;
+		{
+			SetDlgItemText(hWndDlg,IDC_SCORE,ToString(CGame::GetInstance().GetLevel()->GetScore()).c_str());
+			return true;
+		}
+		break;
 
 	case WM_COMMAND:
-		switch(_wparam)
 		{
-			case IDC_EXIT:
+			switch(_wparam)
 			{
-				PostQuitMessage(0);
-				return false;
+				case IDC_EXIT:
+				{
+					PostQuitMessage(0);
+					return false;
+				}
+					break;
+				case IDC_NEWGAME:
+				{
+					CGame::GetInstance().NewGame();
+					EndDialog(hWndDlg, 0);
+					return true;
+				}
+					break;
+				case IDC_RESTARTGAME:
+				{
+					CGame::GetInstance().RestartGame();
+					EndDialog(hWndDlg, 0);
+					return true;
+				}
+					break;
 			}
-				break;
-			case IDC_NEWGAME:
-			{
-				CGame::GetInstance().NewGame();
-				EndDialog(hWndDlg, 0);
-				return true;
-			}
-				break;
-			case IDC_RESTARTGAME:
-			{
-				CGame::GetInstance().RestartGame();
-				EndDialog(hWndDlg, 0);
-				return true;
-			}
-				break;
+			break;
+		}
+		break;
+
+	case WM_CLOSE:
+		{
+		EndDialog(hWndDlg, 0);
+		return true;
 		}
 		break;
 	}
+
 
 	return false;
 }

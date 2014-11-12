@@ -95,9 +95,6 @@ void CDrawPile::Process( float _fDeltaTick )
 		SetDrawX( m_pDraw.top()->GetFace() * CARD_WIDTH );
 		SetDrawY( m_pDraw.top()->GetSuit() * CARD_HEIGHT );
 	}
-	OutputDebugString(ToString(GetDrawX()).c_str());
-	OutputDebugString("\n");
-	OutputDebugString(ToString(GetDrawY()).c_str());
 
 }
 

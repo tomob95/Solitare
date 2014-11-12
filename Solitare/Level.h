@@ -52,6 +52,7 @@ public:
 	void DeckClick();
 	int GetDeckX();
 	int GetDeckY();
+	int GetScore();
 	//static LRESULT CALLBACK DlgProc(HWND hWndDlg, UINT _msg, WPARAM _wparam, LPARAM _lparam);
 
 protected:
