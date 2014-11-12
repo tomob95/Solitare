@@ -12,8 +12,6 @@
 // Mail			: kelsey.scheurich@mediadesign.school.nz
 //
 
-// Library Includes
-
 // Local Includes
 #include "resource.h"
 #include "game.h"
@@ -27,19 +25,35 @@
 HDC CSprite::s_hSharedSpriteDC = 0;
 int CSprite::s_iRefCount = 0;
 
-// Implementation
-CSprite::CSprite(): m_iX(0), m_iY(0)
+/***********************
+
+ * CSprite: Constructor
+ * @author: 
+
+ ********************/
+CSprite::CSprite()
+	: m_iX(0), m_iY(0) // Default to 0
 {
 	++s_iRefCount;
 }
 
+/***********************
+
+ * ~CSprite: Destructor
+ * @author: 
+
+ ********************/
 CSprite::~CSprite()
 {
+	// Delete sprite
 	DeleteObject(m_hSprite);
-	//DeleteObject(m_hMask);
+	// Decrease count
 	--s_iRefCount;
+	
+	// If count is 0
 	if (s_iRefCount == 0)
 	{
+		// delete
 		DeleteDC(s_hSharedSpriteDC);
 		s_hSharedSpriteDC = 0;
 	}
