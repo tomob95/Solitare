@@ -34,6 +34,8 @@ public:
 	bool IsMouseDraggingCards();
 	void DragFromColumn(int _ColumnNo);
 	void DeckClick();
+	int GetDeckX();
+	int GetDeckY();
 protected:
 	void ProcessCheckForWin();
 	void UpdateScoreText();
@@ -53,7 +55,7 @@ protected:
 	int m_iDraggedCardsLastColumn;
 	int m_iWidth;
 	int m_iHeight;
-	std::wstring m_strScore;
+	std::string m_strScore;
 	bool m_bMouseDown;
 
 	int m_fMouseX;

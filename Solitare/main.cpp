@@ -28,7 +28,7 @@
 #include "utils.h"
 #include "resource.h"
 
-#define WINDOW_CLASS_NAME L"WINCLASS1"
+#define WINDOW_CLASS_NAME "WINCLASS1"
 
 //Struct and Enum Declarations
 
@@ -75,10 +75,6 @@ LRESULT CALLBACK WindowProc(HWND _hwnd,	UINT _msg,	WPARAM _wparam,	LPARAM _lpara
 	{
 		// Call GetInstance of game and set new mouse coordinates
 		CGame::GetInstance().SetMouseCoords(LOWORD(_lparam), HIWORD(_lparam));
-		if(CGame::GetInstance().GetMouseDown())
-		{
-			CGame::GetInstance().GetLevel()->HandleMouseDrag();			
-		};
 	}
 		break;
 
@@ -91,7 +87,17 @@ LRESULT CALLBACK WindowProc(HWND _hwnd,	UINT _msg,	WPARAM _wparam,	LPARAM _lpara
 			int _iMouseX = LOWORD(_lparam); 
 			int _iMouseY = HIWORD(_lparam);
 			CGame::GetInstance().SetMouseCoords(_iMouseX, _iMouseY);
-			
+			int _iDeckX = CGame::GetInstance().GetLevel()->GetDeckX();
+			int _iDeckY = CGame::GetInstance().GetLevel()->GetDeckY();
+
+			if( ( _iMouseX >= _iDeckX ) && ( _iMouseX < _iDeckX+CARD_WIDTH )
+			&& ( _iMouseY >= _iDeckY ) && ( _iMouseY < _iDeckY+CARD_HEIGHT ) )
+			{
+				// Call deck click function
+				CGame::GetInstance().GetLevel()->DeckClick();
+				break;
+			}
+
 			// Set mousedown to true for game instance
 			CGame::GetInstance().SetMouseDown(true);
 			CGame::GetInstance().GetLevel()->HandleMouseDrag();
@@ -102,10 +108,12 @@ LRESULT CALLBACK WindowProc(HWND _hwnd,	UINT _msg,	WPARAM _wparam,	LPARAM _lpara
 	// If left mouse button is released
 	case WM_LBUTTONUP:
 	{
-
-		// Set mousedown to true for game instance
-		CGame::GetInstance().SetMouseDown(false);
-		CGame::GetInstance().GetLevel()->HandleMouseDrop();
+		if(CGame::GetInstance().GetLevel()->IsMouseDraggingCards())
+		{
+			// Set mousedown to true for game instance
+			CGame::GetInstance().SetMouseDown(false);
+			CGame::GetInstance().GetLevel()->HandleMouseDrop();
+		}
 	}
 		break;
 
@@ -142,7 +150,7 @@ int WINAPI WinMain(HINSTANCE _hInstance, HINSTANCE _hPrevInstance,	LPSTR _lpCmdL
 
 	// Create const ints for window width and height
 	const int WINDOW_WIDTH = 1300;
-	const int WINDOW_HEIGHT = 900;
+	const int WINDOW_HEIGHT = 1080;
 
 	// Window class structure.
 	winclass.cbSize = sizeof(WNDCLASSEX);
@@ -167,7 +175,7 @@ int WINAPI WinMain(HINSTANCE _hInstance, HINSTANCE _hPrevInstance,	LPSTR _lpCmdL
 	// create the window
 	hwnd =	CreateWindowEx(NULL,				// Extended style.
 			WINDOW_CLASS_NAME,					// Class.
-			L"Solitare",						// Title.
+			"Solitare",						// Title.
 			WS_OVERLAPPEDWINDOW | WS_VISIBLE,
 			0, 0,								// Initial x,y.
 			WINDOW_WIDTH, WINDOW_HEIGHT,		// Initial width, height.

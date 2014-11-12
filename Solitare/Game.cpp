@@ -99,13 +99,13 @@ CGame& CGame::GetInstance()
 
 void CGame::GameOverWon()
 {
-	MessageBox(m_hMainWindow, L"Winner!", L"Game Over", MB_OK);
+	MessageBox(m_hMainWindow, "Winner!", "Game Over", MB_OK);
 	PostQuitMessage(0);
 }
 
 void CGame::GameOverLost()
 {
-	MessageBox(m_hMainWindow, L"Loser!", L"Game Over", MB_OK);
+	MessageBox(m_hMainWindow, "Loser!", "Game Over", MB_OK);
 	PostQuitMessage(0);
 }
 
