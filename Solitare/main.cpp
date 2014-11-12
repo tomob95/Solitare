@@ -94,6 +94,12 @@ LRESULT CALLBACK WindowProc(HWND _hwnd,	UINT _msg,	WPARAM _wparam,	LPARAM _lpara
 				return true;
 			}
 				break;
+			case ID_HELP:
+				{
+					DialogBox(CGame::GetInstance().GetAppInstance(), MAKEINTRESOURCE(IDD_DIALOG2), CGame::GetInstance().GetWindow(),  (DLGPROC)CGame::DlgProc);
+					return true;
+				}
+				break;
 		}
 		break;
 

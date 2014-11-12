@@ -361,7 +361,10 @@ LRESULT CALLBACK CGame::DlgProc(HWND hWndDlg, UINT _msg, WPARAM _wparam, LPARAM 
 	{
 	case WM_INITDIALOG:
 		{
+			char* _Instructions = "- The aim of the game is to sort all the cards into the four suit piles at \nthe top right of the screen, from lowest (ace) to highest (king).\n- There are 7 columns in the lower portion of the screen. The first column\nhas one card, the second two, etc. The topmost card is face up.\n- Only cards that are face up can be moved or have other face up cards placed\non top of them, and these must be the opposite color to the card below.\n- Cards within the columns must be in decending order with alternating color,\nfrom highest (king) to lowest (ace).\n- The remaining 24 cards are in the deck, top left of the screen. You can click\non the deck to draw a card, which you can then choose to add to \nyour columns. You can't reshuffle the deck.\n- If you run out of cards in the deck, simply click again to flip the drawn\n	pile back onto the deck.\n- If there is an empty space in a column, only a king may be placed there.\n- Click and drag cards to move them, and click again to drop them into place.\n- You gain points for various moves:\n	- 5 points if you move a card to a place within a column\n	- 10 points if you move a card to a suit pile\n	- 5 points for flipping a card to face up";
 			SetDlgItemText(hWndDlg,IDC_SCORE,ToString(CGame::GetInstance().GetLevel()->GetScore()).c_str());
+			SetDlgItemText(hWndDlg,IDC_INSTRUCTIONS,ToString(_Instructions).c_str());
+
 			return true;
 		}
 		break;
@@ -386,6 +389,12 @@ LRESULT CALLBACK CGame::DlgProc(HWND hWndDlg, UINT _msg, WPARAM _wparam, LPARAM 
 				case IDC_RESTARTGAME:
 				{
 					CGame::GetInstance().RestartGame();
+					EndDialog(hWndDlg, 0);
+					return true;
+				}
+					break;
+				case IDOK:
+				{
 					EndDialog(hWndDlg, 0);
 					return true;
 				}
