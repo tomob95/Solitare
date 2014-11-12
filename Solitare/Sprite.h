@@ -31,7 +31,6 @@ public:
 
 	bool Initialise(int _iDrawX, int _iDrawY);
 	void Draw();
-	void Process(float _fDeltaTick);
 	int GetWidth() const;
 	int GetHeight() const;
 	int GetX() const;

@@ -59,112 +59,200 @@ CSprite::~CSprite()
 	}
 }
 
+/***********************
+
+ * Initialise: Initialise the sprite
+ * @author: 
+ * @parameter: int _iDrawX, x pos
+ *				int _iDrawY, y pos
+ * @return: bool
+
+ ********************/
 bool CSprite::Initialise(int _iDrawX, int _iDrawY)
 {
+	// Get game instance
 	HINSTANCE hInstance = CGame::GetInstance().GetAppInstance();
 
+	// If not shared sprite
 	if (!s_hSharedSpriteDC)
 	{
+		// Create one
 		s_hSharedSpriteDC = CreateCompatibleDC(NULL);
 	}
 
-	//if (!m_hSprite)
-	//{
-	//	m_hSprite = (HBITMAP)LoadImage(hInstance, MAKEINTRESOURCE(IDB_CARDS), IMAGE_BITMAP, 0, 0, 0);
-	//	GetObject(m_hSprite, sizeof(BITMAP), &m_bitmapSprite);
-	//}
-
+	// Set x & y pos
 	m_iDrawX = 132 * _iDrawX;
 	m_iDrawY = 192 * _iDrawY;
 
+	// Load bitmap into sprite
 	m_hSprite = LoadBitmap(hInstance, MAKEINTRESOURCE(IDB_CARDS));
-	//m_hMask = LoadBitmap(hInstance, MAKEINTRESOURCE(_iMaskResourceID));
-	//VALIDATE(m_hMask);
 	GetObject(m_hSprite, sizeof(BITMAP), &m_bitmapSprite);
 
-	//GetObject(m_hMask, sizeof(BITMAP), &m_bitmapMask);
 	return (true);
 }
 
+/***********************
+
+ * Draw: Draw the sprite
+ * @author:
+
+ ********************/
 void CSprite::Draw()
 {
-	//int iW = GetWidth();
-	//int iH = GetHeight();
-	//int iX = m_iX - (iW / 2);
-	//int iY = m_iY - (iH / 2);
+	// Get back buffer
 	CBackBuffer* pBackBuffer = CGame::GetInstance().GetBackBuffer();
 
+	// Set old object to shared sprite
 	HGDIOBJ hOldObj = SelectObject(s_hSharedSpriteDC, m_hSprite);
-	//BitBlt(pBackBuffer->GetBFDC(), iX, iY, iW, iH, s_hSharedSpriteDC, 0, 0, SRCAND);
-	//SelectObject(s_hSharedSpriteDC, m_hSprite);
-	//BitBlt(pBackBuffer->GetBFDC(), iX, iY, iW, iH, s_hSharedSpriteDC, 0, 0, SRCPAINT);
-	//SelectObject(s_hSharedSpriteDC, hOldObj);
+	// Draw
 	BitBlt(pBackBuffer->GetBFDC(), m_iX, m_iY, CARD_WIDTH, CARD_HEIGHT, s_hSharedSpriteDC, MASK_X, MASK_Y, SRCAND);
 	BitBlt(pBackBuffer->GetBFDC(), m_iX, m_iY, CARD_WIDTH, CARD_HEIGHT, s_hSharedSpriteDC, m_iDrawX, m_iDrawY, SRCPAINT);
 	SelectObject(s_hSharedSpriteDC, hOldObj);
 
 }
 
-void CSprite::Process(float _fDeltaTick)
-{
-}
+/***********************
 
+ * GetWidth: Get width of sprite
+ * @author:
+ * @return: int
+
+ ********************/
 int CSprite::GetWidth() const
 {
 	return (m_bitmapSprite.bmWidth);
 }
 
+/***********************
+
+ * GetHeight: Get height of sprite
+ * @author:
+ * @return: int
+
+ ********************/
 int CSprite::GetHeight() const
 {
 	return (m_bitmapSprite.bmHeight);
 }
 
+/***********************
+
+ * GetX: Get x pos of sprite
+ * @author:
+ * @return: int
+
+ ********************/
 int CSprite::GetX() const
 {
 	return (m_iX);
 }
 
+/***********************
+
+ * GetY: Get y pos of sprite
+ * @author:
+ * @return: int
+
+ ********************/
 int CSprite::GetY() const
 {
 	return (m_iY);
 }
 
+/***********************
+
+ * SetX: Set x pos of sprite
+ * @author:
+ * @parameter: int _i, x pos
+
+ ********************/
 void CSprite::SetX(int _i)
 {
 	m_iX = _i;	
 }
 
+/***********************
+
+ * SetY: Set y pos of sprite
+ * @author:
+ * @parameter: int _i, y pos
+
+ ********************/
 void CSprite::SetY(int _i)
 {
 	m_iY = _i;
 }
 
+/***********************
+
+ * GetDrawX: Get draw x pos of sprite
+ * @author:
+ * @return: int
+
+ ********************/
 int CSprite::GetDrawX() const
 {
-	return m_iDrawX;
+	return( m_iDrawX );
 }
 
+/***********************
+
+ * GetDrawY: Get draw y pos of sprite
+ * @author:
+ * @return: int
+
+ ********************/
 int CSprite::GetDrawY() const
 {
-	return m_iDrawY;
+	return( m_iDrawY );
 }
 
+/***********************
+
+ * SetDrawX: Set draw x pos of sprite
+ * @author:
+ * @parameter: int _i
+
+ ********************/
 void CSprite::SetDrawX(int _i)
 {
 	m_iDrawX = _i;
 }
 
+/***********************
+
+ * SetDrawY: Set draw y pos of sprite
+ * @author:
+ * @parameter: int _i
+
+ ********************/
 void CSprite::SetDrawY(int _i)
 {
 	m_iDrawY = _i;
 }
 
+/***********************
+
+ * TranslateRelative: Translate sprite relative to current position
+ * @author:
+ * @parameter: int _iX, x pos
+ *				int _iY, y pos
+
+ ********************/
 void CSprite::TranslateRelative(int _iX, int _iY)
 {
 	m_iX += _iX;
 	m_iY += _iY;
 }
 
+/***********************
+
+ * TranslateAbsolute: Translate sprite to new position
+ * @author:
+ * @parameter: int _iX, x pos
+ *				int _iY, y pos
+
+ ********************/
 void CSprite::TranslateAbsolute(int _iX, int _iY)
 {
 	m_iX = _iX;
