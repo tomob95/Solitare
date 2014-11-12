@@ -7,8 +7,8 @@
 // 2014 (c) Media Design School
 //
 // File Name	: Deck.h
-// Description	: Main implementation of the program
-// Author		: Kelsey Scheurich
+// Description	: Header for the Deck class
+// Author		: Tom O'Brien, Kelsey Scheurich, Tom Butler
 // Mail			: kelsey.scheurich@mediadesign.school.nz
 //
 
@@ -31,11 +31,12 @@ public:
 	// Coonstructor/Destructor
 	CDeck(void);
 	virtual ~CDeck(void);
+
 	virtual bool Initialise(int _iDrawX, int _iDrawY);
 	virtual void Draw();
 	virtual void Process(float _fDeltaTick);
 
-	// Prototypes
+	// Member functions
 	bool DeckEmpty();
 	CCard* GetTopCard();
 

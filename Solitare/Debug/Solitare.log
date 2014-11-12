@@ -1,11 +1,30 @@
-﻿Build started 12/11/2014 7:38:10 p.m..
-     1>Project "D:\Users\Thomas.butler\Documents\GitHub\Solitare\Solitare\Solitare.vcxproj" on node 2 (Build target(s)).
+﻿Build started 12/11/2014 09:31:13 PM.
+     1>Project "F:\GitHub\Solitare\Solitare\Solitare.vcxproj" on node 2 (build target(s)).
        Project file contains ToolsVersion="12.0". This toolset may be unknown or missing, in which case you may be able to resolve this by installing the appropriate version of MSBuild, or the build may have been forced to a particular ToolsVersion for policy reasons. Treating the project as if it had ToolsVersion="4.0". For more information, please see http://go.microsoft.com/fwlink/?LinkId=291333.
-     1>ClCompile:
-         C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\CL.exe /c /ZI /nologo /W3 /WX- /sdl /Od /Oy- /D WIN32 /D _DEBUG /D _WINDOWS /D _MBCS /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc110.pdb" /Gd /TP /analyze- /errorReport:prompt Level.cpp
+     1>InitializeBuildStatus:
+         Creating "Debug\Solitare.unsuccessfulbuild" because "AlwaysCreate" was specified.
+       ClCompile:
+         C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\CL.exe /c /ZI /nologo /W3 /WX- /Od /Oy- /D WIN32 /D _DEBUG /D _WINDOWS /D _MBCS /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc100.pdb" /Gd /TP /analyze- /errorReport:prompt Card.cpp Column.cpp Deck.cpp DrawPile.cpp Entity.cpp Game.cpp Home.cpp Level.cpp Sprite.cpp main.cpp
+         Card.cpp
+         Generating Code...
+         Compiling...
+         main.cpp
+         Sprite.cpp
          Level.cpp
+         Home.cpp
+         Game.cpp
+         Entity.cpp
+         DrawPile.cpp
+         Deck.cpp
+         Column.cpp
+         Generating Code...
+       ResourceCompile:
+         All outputs are up-to-date.
+       ManifestResourceCompile:
+         All outputs are up-to-date.
        Link:
-         C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"D:\Users\Thomas.butler\Documents\GitHub\Solitare\Debug\Solitare.exe" /INCREMENTAL /NOLOGO winmm.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"D:\Users\Thomas.butler\Documents\GitHub\Solitare\Debug\Solitare.pdb" /SUBSYSTEM:WINDOWS /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"D:\Users\Thomas.butler\Documents\GitHub\Solitare\Debug\Solitare.lib" /MACHINE:X86 Debug\Solitare.res
+         C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"F:\GitHub\Solitare\Debug\Solitare.exe" /INCREMENTAL /NOLOGO winmm.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /ManifestFile:"Debug\Solitare.exe.intermediate.manifest" /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /DEBUG /PDB:"F:\GitHub\Solitare\Debug\Solitare.pdb" /SUBSYSTEM:WINDOWS /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"F:\GitHub\Solitare\Debug\Solitare.lib" /MACHINE:X86 Debug\Solitare.res
+         Debug\Solitare.exe.embed.manifest.res
          Debug\BackBuffer.obj
          Debug\Card.obj
          Debug\Clock.obj
@@ -18,9 +37,17 @@
          Debug\Level.obj
          Debug\main.obj
          Debug\Sprite.obj
-         Solitare.vcxproj -> D:\Users\Thomas.butler\Documents\GitHub\Solitare\Debug\Solitare.exe
-     1>Done Building Project "D:\Users\Thomas.butler\Documents\GitHub\Solitare\Solitare\Solitare.vcxproj" (Build target(s)).
+       Manifest:
+         C:\Program Files (x86)\Microsoft SDKs\Windows\v7.0A\bin\mt.exe /nologo /verbose /out:"Debug\Solitare.exe.embed.manifest" /manifest Debug\Solitare.exe.intermediate.manifest
+         All outputs are up-to-date.
+       LinkEmbedManifest:
+         All outputs are up-to-date.
+         Solitare.vcxproj -> F:\GitHub\Solitare\Debug\Solitare.exe
+       FinalizeBuildStatus:
+         Deleting file "Debug\Solitare.unsuccessfulbuild".
+         Touching "Debug\Solitare.lastbuildstate".
+     1>Done Building Project "F:\GitHub\Solitare\Solitare\Solitare.vcxproj" (build target(s)).
 
 Build succeeded.
 
-Time Elapsed 00:00:01.97
+Time Elapsed 00:00:06.17

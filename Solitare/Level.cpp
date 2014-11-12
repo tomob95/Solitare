@@ -216,14 +216,6 @@ void CLevel::Process(float _fDeltaTick)
 	//Process the deck
 	m_pDeck->Process(_fDeltaTick);
 	m_pDraw->Process( _fDeltaTick );
-
-	//Process the columns
-
-	// Check if game is over
-	ProcessCheckForWin();
-
-	// Call process recursively
-	m_pDeck->Process(_fDeltaTick);
 	
 	// For each column
 	for (int i = 0; i < 7; i++)
@@ -272,6 +264,37 @@ void CLevel::Process(float _fDeltaTick)
  ********************/
 void CLevel::ProcessCheckForWin()
 {
+	int iCheck = 0;
+	// Loop through all homes
+	for( int i = 0; i < 4; ++i )
+	{
+		if( m_pAceHomes[ i ]->m_pHome.size() == 13 )
+		{
+			iCheck++;
+		}
+	}
+
+	if( iCheck == 4 )
+	{
+		HDC hdc = CGame::GetInstance().GetBackBuffer()->GetBFDC();
+
+		// Create x & y pos
+		int kiX = 60;
+		int kiY = m_iHeight - 600;
+
+		UpdateScoreText(10);	
+		string _strGO = "You won, game over!";
+
+		RECT _rTextPos;
+		_rTextPos.top = kiY;
+		_rTextPos.left = kiX;
+
+		// Output text
+		DrawText(hdc, _strGO.c_str(), _strGO.size(),&_rTextPos, DT_SINGLELINE);
+		DrawScore();
+
+	}
+
 	//TODO: this (m_strScore)
 }
 

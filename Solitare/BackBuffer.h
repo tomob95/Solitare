@@ -1,11 +1,25 @@
+//
+// Bachelor of Software Engineering
+// Media Design School
+// Auckland
+// New Zealand
+//
+// 2014 (c) Media Design School
+//
+// File Name	: backbuffer.h
+// Description	: Header for the backbuffer class
+// Author		: Tom O'Brien, Kelsey Scheurich, Tom Butler
+// Mail			: kelsey.scheurich@mediadesign.school.nz
+//
+
 #pragma once
+
 #if !defined(__BACKBUFFER_H__)
 #define __BACKBUFFER_H__
+
 // Library Includes
 #include <Windows.h>
-// Local Includes
-// Types
-// Constants
+
 // Prototypes
 class CBackBuffer
 {
