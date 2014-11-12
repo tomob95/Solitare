@@ -6,8 +6,8 @@
 //
 // 2014 (c) Media Design School
 //
-// File Name	: BackBuffer.cpp
-// Description	: Implementation for the BackBuffer class
+// File Name	: Deck.cpp
+// Description	: Implementation for the Deck class
 // Author		: Tom O'Brien, Kelsey Scheurich, Tom Butler
 // Mail			: kelsey.scheurich@mediadesign.school.nz
 //
@@ -44,6 +44,7 @@ CDeck::~CDeck(void)
  * @author: 
  * @parameters: int _iDrawX, draw position
  *				int _iDrawY, draw position
+ * @return: bool
 
  ********************/
 bool CDeck::Initialise(int _iDrawX, int _iDrawY)

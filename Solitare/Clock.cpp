@@ -7,7 +7,7 @@
 // 2014 (c) Media Design School
 //
 // File Name	: Clock.cpp
-// Description	: Implementation for the BackBuffer class
+// Description	: Implementation for the clock class
 // Author		: Tom O'Brien, Kelsey Scheurich, Tom Butler
 // Mail			: kelsey.scheurich@mediadesign.school.nz
 //
@@ -86,6 +86,7 @@ void CClock::Process()
 
  * GetDeltaTick: Get the delta tick
  * @author:  
+ * @return: float
 
  ********************/
 float CClock::GetDeltaTick()

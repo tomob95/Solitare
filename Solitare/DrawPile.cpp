@@ -12,9 +12,12 @@
 // Mail			: kelsey.scheurich@mediadesign.school.nz
 //
 
+// Local includes
+#include "utils.h"
+
 // This include
 #include "DrawPile.h"
-#include "utils.h"
+
 
 /***********************
 
@@ -42,6 +45,7 @@ CDrawPile::~CDrawPile(void)
  * @author: 
  * @parameters: int _iDrawX, draw position
  *				int _iDrawY, draw position
+ * @return: bool
 
  ********************/
 bool CDrawPile::Initialise( int _iDrawX, int _iDrawY )

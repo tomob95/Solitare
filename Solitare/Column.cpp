@@ -6,15 +6,18 @@
 //
 // 2014 (c) Media Design School
 //
-// File Name	: BackBuffer.cpp
-// Description	: Implementation for the BackBuffer class
+// File Name	: Column.cpp
+// Description	: Implementation for the column class
 // Author		: Tom O'Brien, Kelsey Scheurich, Tom Butler
 // Mail			: kelsey.scheurich@mediadesign.school.nz
 //
 
+// Local includes
+#include "utils.h"
+
 // This includes
 #include "Column.h"
-#include "utils.h"
+
 
 /***********************
 
@@ -109,15 +112,12 @@ void CColumn::Process(float _fDeltaTick)
 
 			else
 			{
+				// Draw the front
 				m_pPile[i]->SetDrawX(m_pPile[i]->GetFace() * CARD_WIDTH);
 				m_pPile[i]->SetDrawY(m_pPile[i]->GetSuit() * CARD_HEIGHT);
 			}
 
-
-
-
-			// Draw the front
-
+			// Set x & y position
 			m_pPile[i]->SetX(static_cast<int>(GetX()));
 			m_pPile[i]->SetY(static_cast<int>(GetY() + (i * 58)));
 			m_pPile[i]->Process(_fDeltaTick);

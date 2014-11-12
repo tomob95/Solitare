@@ -19,7 +19,7 @@
 /***********************
 
  * CBackBuffer: Constructor for BackBuffer class
- * @author: Tom O'Brien
+ * @author: 
 
  ********************/
 CBackBuffer::CBackBuffer()
@@ -35,7 +35,7 @@ CBackBuffer::CBackBuffer()
 /***********************
 
  * ~CBackBuffer: Deconstructor
- * @author: Tom O'Brien
+ * @author: 
 
  ********************/
 CBackBuffer::~CBackBuffer()
@@ -49,7 +49,10 @@ CBackBuffer::~CBackBuffer()
 /***********************
 
  * Initialise: Initialise the backbuffer
- * @author: Tom O'Brien
+ * @author:
+ * @parameter: HWND _hWnd, window handler
+ *				int _iWidth, width 
+ *				int _iHeight, height
  * @return: bool
 
  ********************/
@@ -83,7 +86,7 @@ bool CBackBuffer::Initialise(HWND _hWnd, int _iWidth, int _iHeight)
 /***********************
 
  * Clear: Clears the screen
- * @author: Tom O'Brien
+ * @author: 
 
  ********************/
 void CBackBuffer::Clear()
@@ -99,7 +102,7 @@ void CBackBuffer::Clear()
 /***********************
 
  * GetBFDC: Get BFDC
- * @author: Tom O'Brien
+ * @author: 
  * @return: HDC
 
  ********************/
@@ -112,7 +115,7 @@ HDC CBackBuffer::GetBFDC() const
 /***********************
 
  * GetWidth: Get window width
- * @author: Tom O'Brien
+ * @author: 
  * @return: int
 
  ********************/
@@ -125,7 +128,7 @@ int CBackBuffer::GetWidth() const
 /***********************
 
  * GetHeight: Get window height
- * @author: Tom O'Brien
+ * @author: 
  * @return: int
 
  ********************/
@@ -138,7 +141,7 @@ int CBackBuffer::GetHeight() const
 /***********************
 
  * Present: Current position of buffer
- * @author: Tom O'Brien
+ * @author: 
 
  ********************/
 void CBackBuffer::Present()

@@ -6,8 +6,8 @@
 //
 // 2014 (c) Media Design School
 //
-// File Name	: BackBuffer.cpp
-// Description	: Implementation for the BackBuffer class
+// File Name	: Main.cpp
+// Description	: Main implementation of the program
 // Author		: Tom O'Brien, Kelsey Scheurich, Tom Butler
 // Mail			: kelsey.scheurich@mediadesign.school.nz
 //
@@ -90,6 +90,7 @@ LRESULT CALLBACK WindowProc(HWND _hwnd,	UINT _msg,	WPARAM _wparam,	LPARAM _lpara
 			int _iDeckX = CGame::GetInstance().GetLevel()->GetDeckX();
 			int _iDeckY = CGame::GetInstance().GetLevel()->GetDeckY();
 
+			// If mouse is over deck
 			if( ( _iMouseX >= _iDeckX ) && ( _iMouseX < _iDeckX+CARD_WIDTH )
 			&& ( _iMouseY >= _iDeckY ) && ( _iMouseY < _iDeckY+CARD_HEIGHT ) )
 			{
