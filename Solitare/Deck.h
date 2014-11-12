@@ -34,7 +34,7 @@ public:
 	//			Set CLevel::m_pSelectedCard to card
 
 	vector<CCard*> m_pDeck;
-	stack<CCard*> m_pDraw;
+	//stack<CCard*> m_pDraw;
 
 
 };

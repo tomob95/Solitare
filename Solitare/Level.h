@@ -10,6 +10,7 @@
 // Constants
 // Prototypes
 class CCard;
+class CDrawPile;
 class CDeck;
 class CHome;
 class CColumn;
@@ -41,6 +42,7 @@ private:
 public:
 protected:
 	CDeck* m_pDeck;
+	CDrawPile* m_pDraw;
 	std::vector<CColumn*> m_pColumns;
 	std::vector<CHome*> m_pAceHomes;
 	std::vector<CCard*> m_pDraggedCards;

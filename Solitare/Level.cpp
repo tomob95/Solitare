@@ -23,6 +23,7 @@
 #include "utils.h"
 #include "backbuffer.h"
 #include "Deck.h"
+#include "DrawPile.h"
 #include "Column.h"
 
 #include "Home.h"
@@ -76,11 +77,15 @@ bool CLevel::Initialise(int _iWidth, int _iHeight)
 
 	// Create new deck, set as member
 	m_pDeck = new CDeck();
+	m_pDraw = new CDrawPile();
 	// Validate and intialise deck
 	VALIDATE(m_pDeck->Initialise(0, 4));
+	VALIDATE(m_pDraw->Initialise(6, 4));
 	// Set deck x & y position
 	m_pDeck->SetX(40);
 	m_pDeck->SetY(40);
+	m_pDraw->SetX(204);
+	m_pDraw->SetY(40);
 
 	// Create temp pointers for card, column and the home piles
 	CCard* _TempCard;
@@ -168,6 +173,7 @@ void CLevel::Draw()
 	// Call draw recursively
 
 	m_pDeck->Draw();
+	m_pDraw->Draw();
 	// Draw the columns
 	for(int i=0; i<7; i++)
 	{
