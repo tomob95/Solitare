@@ -44,10 +44,10 @@ CDrawPile::~CDrawPile(void)
  *				int _iDrawY, draw position
 
  ********************/
-bool CDrawPile::Initialise(int _iDrawX, int _iDrawY)
+bool CDrawPile::Initialise( int _iDrawX, int _iDrawY )
 {
 	// Validate and initialise entitiy
-	VALIDATE(CEntity::Initialise(_iDrawX, _iDrawY));
+	VALIDATE( CEntity::Initialise( _iDrawX, _iDrawY ) );
 
 	return (true);
 }
@@ -71,24 +71,24 @@ void CDrawPile::Draw()
  * @parameters: float _fDeltaTick, delta time
 
  ********************/
-void CDrawPile::Process(float _fDeltaTick)
+void CDrawPile::Process( float _fDeltaTick )
 {
 	// Process the entity
-	CEntity::Process(_fDeltaTick);
+	CEntity::Process( _fDeltaTick );
 
 	// If the draw pile is empty
 	if( DrawEmpty() )
 	{
 		//draw empty deck sprite
-		SetDrawX(CARD_WIDTH * 6);
-		SetDrawY(CARD_HEIGHT * 4);
+		SetDrawX( CARD_WIDTH * 6 );
+		SetDrawY( CARD_HEIGHT * 4 );
 	}
 	else
 	{
 		//draw card front sprite
 		//CEntity::Draw();
-		SetDrawX(m_pDraw.top()->GetFace() * CARD_WIDTH);
-		SetDrawY(m_pDraw.top()->GetFace() * CARD_HEIGHT);
+		SetDrawX( m_pDraw.top()->GetFace() * CARD_WIDTH );
+		SetDrawY( m_pDraw.top()->GetFace() * CARD_HEIGHT );
 	}
 }
 
@@ -102,7 +102,7 @@ void CDrawPile::Process(float _fDeltaTick)
 bool CDrawPile::DrawEmpty()
 {
 	// Return if deck is empty
-	return (m_pDraw.empty());
+	return( m_pDraw.empty() );
 }
 
 /***********************
@@ -114,5 +114,5 @@ bool CDrawPile::DrawEmpty()
  ********************/
 CCard* CDrawPile::GetTopCard()
 {
-	return (m_pDraw.top());
+	return( m_pDraw.top() );
 }

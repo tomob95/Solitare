@@ -168,12 +168,10 @@ bool CLevel::Initialise(int _iWidth, int _iHeight)
  ********************/
 void CLevel::Draw()
 {
-
-
-	// Call draw recursively
-
+	// Call draw
 	m_pDeck->Draw();
 	m_pDraw->Draw();
+
 	// Draw the columns
 	for(int i=0; i<7; i++)
 	{
