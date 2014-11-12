@@ -113,6 +113,17 @@ void CSprite::Draw()
 
 /***********************
 
+ * Process: Process the sprite
+ * @author:
+ * @parameter: float _fDeltaTick, delta time
+
+ ********************/
+void CSprite::Process( float _fDeltaTick )
+{
+}
+
+/***********************
+
  * GetWidth: Get width of sprite
  * @author:
  * @return: int

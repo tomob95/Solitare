@@ -1,23 +1,11 @@
-﻿Build started 12/11/2014 09:31:13 PM.
+﻿Build started 12/11/2014 11:24:00 PM.
      1>Project "F:\GitHub\Solitare\Solitare\Solitare.vcxproj" on node 2 (build target(s)).
        Project file contains ToolsVersion="12.0". This toolset may be unknown or missing, in which case you may be able to resolve this by installing the appropriate version of MSBuild, or the build may have been forced to a particular ToolsVersion for policy reasons. Treating the project as if it had ToolsVersion="4.0". For more information, please see http://go.microsoft.com/fwlink/?LinkId=291333.
      1>InitializeBuildStatus:
-         Creating "Debug\Solitare.unsuccessfulbuild" because "AlwaysCreate" was specified.
+         Touching "Debug\Solitare.unsuccessfulbuild".
        ClCompile:
-         C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\CL.exe /c /ZI /nologo /W3 /WX- /Od /Oy- /D WIN32 /D _DEBUG /D _WINDOWS /D _MBCS /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc100.pdb" /Gd /TP /analyze- /errorReport:prompt Card.cpp Column.cpp Deck.cpp DrawPile.cpp Entity.cpp Game.cpp Home.cpp Level.cpp Sprite.cpp main.cpp
-         Card.cpp
-         Generating Code...
-         Compiling...
-         main.cpp
+         C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\CL.exe /c /ZI /nologo /W3 /WX- /Od /Oy- /D WIN32 /D _DEBUG /D _WINDOWS /D _MBCS /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc100.pdb" /Gd /TP /analyze- /errorReport:prompt Sprite.cpp
          Sprite.cpp
-         Level.cpp
-         Home.cpp
-         Game.cpp
-         Entity.cpp
-         DrawPile.cpp
-         Deck.cpp
-         Column.cpp
-         Generating Code...
        ResourceCompile:
          All outputs are up-to-date.
        ManifestResourceCompile:
@@ -50,4 +38,4 @@
 
 Build succeeded.
 
-Time Elapsed 00:00:06.17
+Time Elapsed 00:00:01.18
