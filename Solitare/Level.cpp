@@ -213,9 +213,20 @@ void CLevel::Process(float _fDeltaTick)
 	// If the mouse is down
 	if(m_bMouseDown)
 	{
-		// Start drag
-		HandleMouseDrag();
+		// If mouse is over deck
+		if( ( m_fMouseX >= m_pDeck->GetX() ) && ( m_fMouseX < m_pDeck->GetX()+CARD_WIDTH )
+			&& ( m_fMouseY >= m_pDeck->GetY() ) && ( m_fMouseY < m_pDeck->GetY()+CARD_HEIGHT ) )
+		{
+			// Call deck click function
+			DeckClick();
+		}
+		else
+		{
+			// Start drag
+			HandleMouseDrag();
+		}
 	}
+	// Else if cards are being dragged
 	else if (!m_pDraggedCards.empty())
 	{
 		HandleMouseDrop();
@@ -225,6 +236,7 @@ void CLevel::Process(float _fDeltaTick)
 
 	//Process the deck
 	m_pDeck->Process(_fDeltaTick);
+	m_pDraw->Process( _fDeltaTick );
 
 	//Process the columns
 
@@ -557,4 +569,38 @@ void CLevel::UpdateScoreText()
 void CLevel::SetMouseDown(bool _bMouseDown)
 {
 	m_bMouseDown = _bMouseDown;
+}
+
+/***********************
+
+ * DeckClick: Draws another card on deck click
+ * @author: 
+
+ ********************/
+void CLevel::DeckClick()
+{
+	// If the deck is not empty
+	if( !m_pDeck->DeckEmpty() )
+	{
+		// Get top card and put into draw pile
+		CCard* temp = m_pDeck->GetTopCard();
+		temp->SetFaceUp( true );
+		m_pDraw->m_pDraw.push( temp );
+
+	}
+	else // The deck is empty
+	{
+		// Get draw pile
+		while( !m_pDraw->DrawEmpty() )
+		{
+			// Create temp, set as top of draw
+			CCard* temp = m_pDraw->GetTopCard();
+			// Set face up to false
+			temp->SetFaceUp( false );
+			// Push to deck
+			m_pDeck->m_pDeck.push_back( temp );
+			// Pop off draw
+			m_pDraw->m_pDraw.pop();
+		}
+	}
 }

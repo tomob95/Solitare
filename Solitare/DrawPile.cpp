@@ -87,8 +87,8 @@ void CDrawPile::Process(float _fDeltaTick)
 	{
 		//draw card front sprite
 		//CEntity::Draw();
-		//SetDrawX(FRONT_X);
-		//SetDrawY(FRONT_Y);
+		SetDrawX(m_pDraw.top()->GetFace() * CARD_WIDTH);
+		SetDrawY(m_pDraw.top()->GetFace() * CARD_HEIGHT);
 	}
 }
 
