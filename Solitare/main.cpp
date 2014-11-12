@@ -81,18 +81,39 @@ LRESULT CALLBACK WindowProc(HWND _hwnd,	UINT _msg,	WPARAM _wparam,	LPARAM _lpara
 	// If left mouse button is pressed
 	case WM_LBUTTONDOWN:
 	{
-		// Set mousedown to true for game instance
-		CGame::GetInstance().SetMouseDown(true);
+		//Get Mouse Coords
+		if(!CGame::GetInstance().GetLevel()->IsMouseDraggingCards())
+		{
+			int _iMouseX = LOWORD(_lparam); 
+			int _iMouseY = HIWORD(_lparam);
+			CGame::GetInstance().SetMouseCoords(_iMouseX, _iMouseY);
+			int _iDeckX = CGame::GetInstance().GetLevel()->GetDeckX();
+			int _iDeckY = CGame::GetInstance().GetLevel()->GetDeckY();
+
+			if( ( _iMouseX >= _iDeckX ) && ( _iMouseX < _iDeckX+CARD_WIDTH )
+			&& ( _iMouseY >= _iDeckY ) && ( _iMouseY < _iDeckY+CARD_HEIGHT ) )
+			{
+				// Call deck click function
+				CGame::GetInstance().GetLevel()->DeckClick();
+				break;
+			}
+
+			// Set mousedown to true for game instance
+			CGame::GetInstance().SetMouseDown(true);
+			CGame::GetInstance().GetLevel()->HandleMouseDrag();
+		}
 	}
 		break;
 
 	// If left mouse button is released
 	case WM_LBUTTONUP:
 	{
-
-		// Set mousedown to true for game instance
-		CGame::GetInstance().SetMouseDown(false);
-		//CGame::GetInstance().GetLevel()->HandleMouseDrop();
+		if(CGame::GetInstance().GetLevel()->IsMouseDraggingCards())
+		{
+			// Set mousedown to true for game instance
+			CGame::GetInstance().SetMouseDown(false);
+			CGame::GetInstance().GetLevel()->HandleMouseDrop();
+		}
 	}
 		break;
 
@@ -129,7 +150,7 @@ int WINAPI WinMain(HINSTANCE _hInstance, HINSTANCE _hPrevInstance,	LPSTR _lpCmdL
 
 	// Create const ints for window width and height
 	const int WINDOW_WIDTH = 1300;
-	const int WINDOW_HEIGHT = 900;
+	const int WINDOW_HEIGHT = 1080;
 
 	// Window class structure.
 	winclass.cbSize = sizeof(WNDCLASSEX);

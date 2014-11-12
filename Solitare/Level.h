@@ -30,7 +30,12 @@ public:
 	void HandleMouseDrop();
 	bool CheckCardToColumn(CCard* _pSource, CCard* _pDestination);
 	void SetMouseDown(bool _bMouseDown);
+	bool GetMouseDown();
+	bool IsMouseDraggingCards();
+	void DragFromColumn(int _ColumnNo);
 	void DeckClick();
+	int GetDeckX();
+	int GetDeckY();
 protected:
 	void ProcessCheckForWin();
 	void UpdateScoreText(int _iScore);
