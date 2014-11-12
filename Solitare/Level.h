@@ -75,7 +75,7 @@ protected:
 	int m_iDraggedCardsLastColumn;
 	int m_iWidth;
 	int m_iHeight;
-	int m_iScore;
+	unsigned int m_iScore;
 	bool m_bMouseDown;
 
 	int m_fMouseX;

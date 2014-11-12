@@ -45,5 +45,6 @@ std::string ToString(const T& _value)
 
 // Enum to store card suit
 enum eSuit: int { SPADE = 0, CLUB, HEART, DIAMOND };
+enum eScore: int { CARD_TO_COLUMNS = 5, CARD_TO_ACE_HOME = 10, FLIP_CARD = 5};
 
 #endif // __UTILS_H__

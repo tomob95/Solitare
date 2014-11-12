@@ -32,7 +32,7 @@ public:
 	// Member functions
 	virtual bool Initialise(int _iDrawX, int _iDrawY);
 	virtual void Draw();
-	virtual void Process(float _fDeltaTick);
+	virtual void Process( float _fDeltaTick );
 	CCard* GetTopCard();
 	bool IsEmpty();
 	
