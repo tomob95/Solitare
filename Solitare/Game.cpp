@@ -145,6 +145,11 @@ void CGame::SetMouseDown(bool _bMouseDown)
 	m_pLevel->SetMouseDown(_bMouseDown);
 }
 
+bool CGame::GetMouseDown()
+{
+	return (m_pLevel->GetMouseDown());
+}
+
 void CGame::HandleMouseDrag()
 {
 	m_pLevel->HandleMouseDrag();

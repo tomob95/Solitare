@@ -204,17 +204,6 @@ void CLevel::Draw()
  ********************/
 void CLevel::Process(float _fDeltaTick)
 {
-	// If the mouse is down
-	if(m_bMouseDown)
-	{
-		// Start drag
-		HandleMouseDrag();
-	}
-	else if (!m_pDraggedCards.empty())
-	{
-		HandleMouseDrop();
-	}
-
 	ProcessCheckForWin();
 
 	//Process the deck
@@ -280,6 +269,28 @@ void CLevel::ProcessCheckForWin()
 
 /***********************
 
+ * IsMouseDraggingCards: Check if the mouse is dragging cards
+ * @author: 
+
+ ********************/
+bool CLevel::IsMouseDraggingCards()
+{
+	return (!m_pDraggedCards.empty());
+}
+
+/***********************
+
+ * IsMouseDraggingCards: Check if the mouse is dragging cards
+ * @author: 
+
+ ********************/
+void CLevel::DragFromColumn(int _ColumnNo)
+{
+
+}
+
+/***********************
+
  * HandleMouseDrag: Function to handle dragging mouse
  * @author: 
 
@@ -288,7 +299,7 @@ void CLevel::HandleMouseDrag()
 {
 
 	//Make sure none of the cards are already being dragged
-	if(m_pDraggedCards.empty())
+	if(!IsMouseDraggingCards())
 	{
 		// Iterate through all columns
 		for(int i=0; i<7; i++)
@@ -350,6 +361,7 @@ void CLevel::HandleMouseDrop()
 {
 	int _iColumnX;
 	int _iColumnY;
+
 	//Go through all the columns and see if the mouse is on the column
 	for(unsigned int i = 0; i < 7; i++)
 	{
@@ -373,7 +385,7 @@ void CLevel::HandleMouseDrop()
 			//If there are cards in the column
 			if(!m_pColumns[i]->IsEmpty())
 			{
-				if(CheckCardToColumn(m_pDraggedCards.front(), m_pColumns[i]->GetTopCard()))
+				if(CheckCardToColumn(m_pDraggedCards.back(), m_pColumns[i]->GetTopCard()))
 				{
 					//The cards are valid and need to be moved to the destination column
 					for(unsigned int j=0; j<m_pDraggedCards.size(); j++)
@@ -394,6 +406,7 @@ void CLevel::HandleMouseDrop()
 			//If not, make sure you are trying to move a king into the empty space
 			else if(m_pDraggedCards.back()->GetFace() == 12)
 			{
+				//Move all cards onto the pile
 				for(unsigned int j=0; j<m_pDraggedCards.size(); j++)
 				{
 					CCard* _pTemp = m_pDraggedCards.back();
@@ -402,13 +415,14 @@ void CLevel::HandleMouseDrop()
 					m_pColumns[i]->m_pPile.push_back(_pTemp);
 					_pTemp = nullptr;
 				}
+				//make the old column's top card face up
 				if(!m_pColumns[m_iDraggedCardsLastColumn]->IsEmpty())
 				{
 					m_pColumns[m_iDraggedCardsLastColumn]->GetTopCard()->SetFaceUp(true);	
 				}
 			}
 
-			return;
+			break;
 		}
 	}
 
@@ -424,6 +438,7 @@ void CLevel::HandleMouseDrop()
 			if ((m_fMouseX >= _iColumnX) && (m_fMouseX < _iColumnX + CARD_WIDTH)
 			&& (m_fMouseY >= _iColumnY) && (m_fMouseY < _iColumnY + CARD_HEIGHT))
 			{
+				//Make sure the ace home is empty and you are dropping an ace of the correct type
 				if(m_pAceHomes[i]->IsEmpty() && (m_pDraggedCards.back()->GetFace() == 0) && (m_pDraggedCards.back()->GetSuit() == i))
 				{
 					CCard* _pTemp = m_pDraggedCards.back();
@@ -437,21 +452,25 @@ void CLevel::HandleMouseDrop()
 					}
 					return;
 				}
-				CCard* _TempCard = m_pAceHomes[i]->GetTopCard();
-				//If the card is one higher than the current top of the pile
-				//AND if it is the correct suit
-				if((_TempCard->GetFace() == m_pDraggedCards.front()->GetFace()-1) && (m_pDraggedCards.back()->GetSuit() == i))
+				//the card is not an ace of the correct suit
+				else if(!m_pAceHomes[i]->IsEmpty())
 				{
-					CCard* _pTemp = m_pDraggedCards.back();
-					m_pDraggedCards.pop_back();
-					_pTemp->SetDragged(false);
-					m_pAceHomes[i]->m_pHome.push_back(_pTemp);
-					_pTemp = nullptr;
-					if(!m_pColumns[m_iDraggedCardsLastColumn]->IsEmpty())
+					CCard* _TempCard = m_pAceHomes[i]->GetTopCard();
+					//If the card is one higher than the current top of the pile
+					//AND if it is the correct suit
+					if((_TempCard->GetFace() == m_pDraggedCards.front()->GetFace()-1) && (m_pDraggedCards.back()->GetSuit() == i))
 					{
-						m_pColumns[m_iDraggedCardsLastColumn]->GetTopCard()->SetFaceUp(true);	
+						CCard* _pTemp = m_pDraggedCards.back();
+						m_pDraggedCards.pop_back();
+						_pTemp->SetDragged(false);
+						m_pAceHomes[i]->m_pHome.push_back(_pTemp);
+						_pTemp = nullptr;
+						if(!m_pColumns[m_iDraggedCardsLastColumn]->IsEmpty())
+						{
+							m_pColumns[m_iDraggedCardsLastColumn]->GetTopCard()->SetFaceUp(true);	
+						}
+						return;
 					}
-					return;
 				}
 			}
 		}
@@ -463,7 +482,7 @@ void CLevel::HandleMouseDrop()
 
 	//The mouse wasnt released on anything
 	//Return cards to their previous pile
-	for(unsigned int j=0; j<m_pDraggedCards.size(); j++)
+	while(!m_pDraggedCards.empty())
 	{
 		CCard* _pTemp = m_pDraggedCards.back();
 		m_pDraggedCards.pop_back();
@@ -543,7 +562,7 @@ void CLevel::UpdateScoreText()
 
 /***********************
 
- * SetMouseDown: Set the mouse down as ture
+ * SetMouseDown: Set the mouse down as true or false
  * @author: 
  * @parameter: bool _bMouseDown, bool to set member variable as
 
@@ -551,4 +570,16 @@ void CLevel::UpdateScoreText()
 void CLevel::SetMouseDown(bool _bMouseDown)
 {
 	m_bMouseDown = _bMouseDown;
+}
+
+/***********************
+
+ * GetMouseDown: Return if the mouse is down
+ * @author: 
+ * @return: bool
+
+ ********************/
+bool CLevel::GetMouseDown()
+{
+	return m_bMouseDown;
 }

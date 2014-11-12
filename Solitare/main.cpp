@@ -75,14 +75,27 @@ LRESULT CALLBACK WindowProc(HWND _hwnd,	UINT _msg,	WPARAM _wparam,	LPARAM _lpara
 	{
 		// Call GetInstance of game and set new mouse coordinates
 		CGame::GetInstance().SetMouseCoords(LOWORD(_lparam), HIWORD(_lparam));
+		if(CGame::GetInstance().GetMouseDown())
+		{
+			CGame::GetInstance().GetLevel()->HandleMouseDrag();			
+		};
 	}
 		break;
 
 	// If left mouse button is pressed
 	case WM_LBUTTONDOWN:
 	{
-		// Set mousedown to true for game instance
-		CGame::GetInstance().SetMouseDown(true);
+		//Get Mouse Coords
+		if(!CGame::GetInstance().GetLevel()->IsMouseDraggingCards())
+		{
+			int _iMouseX = LOWORD(_lparam); 
+			int _iMouseY = HIWORD(_lparam);
+			CGame::GetInstance().SetMouseCoords(_iMouseX, _iMouseY);
+			
+			// Set mousedown to true for game instance
+			CGame::GetInstance().SetMouseDown(true);
+			CGame::GetInstance().GetLevel()->HandleMouseDrag();
+		}
 	}
 		break;
 
@@ -92,7 +105,7 @@ LRESULT CALLBACK WindowProc(HWND _hwnd,	UINT _msg,	WPARAM _wparam,	LPARAM _lpara
 
 		// Set mousedown to true for game instance
 		CGame::GetInstance().SetMouseDown(false);
-		//CGame::GetInstance().GetLevel()->HandleMouseDrop();
+		CGame::GetInstance().GetLevel()->HandleMouseDrop();
 	}
 		break;
 

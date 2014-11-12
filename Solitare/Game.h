@@ -27,6 +27,7 @@ public:
 	void GameOverLost();
 	void SetMouseCoords(int _x, int _y);
 	void SetMouseDown(bool _bMouseDown);
+	bool GetMouseDown();
 	void HandleMouseDrag();
 	// Singleton Methods
 	static CGame& GetInstance();
